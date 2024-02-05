@@ -6,7 +6,6 @@ import { useFormik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Success from '../../../others/popup'
 import {useRouter} from 'next/navigation';
-import Select from 'react-select'
 import Link from 'next/link'
 
 
@@ -82,11 +81,6 @@ function Page({id}) {
   useEffect(() => {
      test_it()
   },[])
-
-  const options = [
-    {value: "admin", label:"admin"},
-    {value: "subadmin", label:"subadmin"}
-  ]
 
     return (
 //       <>
@@ -286,7 +280,12 @@ function Page({id}) {
         Role
       </label>
       <div className="relative">
-        <Select name = "user_type" className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" onChange = {formik.handleChange} options = {options} />
+      <select name="user_type"
+         className="px-5 py-3 bg-gray-200 text-gray-700 text-lg rounded" onChange = {formik.handleChange}>
+          <option >--select you role--</option>
+          <option value = "Admin" className='text-gray-700'>admin</option>
+          <option value = "Subadmin" className = "text-gray-700">sub admin</option>
+        </select>
       </div>
     </div>
     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -309,7 +308,6 @@ function Page({id}) {
       />
     </div>
   </div>
-</form>
 <div className="py-5 flex items-center justify-between">
       <Link href = "/user"><button className="w-32 h-12 bg-slate-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mb-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Back
@@ -318,6 +316,7 @@ function Page({id}) {
         Update
       </button>
     </div>
+    </form>
       {showPopup.status && <Success showPopup = {showPopup} setShowPopup={setShowPopup}/>}
 </div>
     )

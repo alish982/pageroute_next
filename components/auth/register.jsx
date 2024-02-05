@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import {useRouter} from 'next/navigation';
 import Success from '../others/popup'
-import Select from 'react-select'
+//import Select from 'react-select'
 
 
 const Register = () => {
@@ -190,7 +190,7 @@ const options = [
       <label className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2" htmlFor="grid-first-name" >
        Name
       </label>
-      <input className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="name" name = "name" 
+      <input className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Name" name = "name" 
             value={formik.values.name}
             onChange={(newVal) => {
             formik.setFieldValue('name',newVal.target.value)
@@ -243,20 +243,12 @@ const options = [
         Role
       </label>
       <div className="relative">
-        <Select name = "user_type" className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state"
-           onChange={(e) => {
-            formik.setFieldValue("user_type", e.target.value)
-            console.log(e.target.value)
-            console.log("e.target.value")
-            setValue((currVal) => {
-              currVal.user_type = e.target.value
-              return currVal
-            })
-            console.log("value")
-            console.log(e.target.value);
-
-          }}
-         options = {options} />
+      <select name="user_type"
+         className="px-5 py-3 bg-gray-200 text-gray-700 text-lg rounded" onChange = {formik.handleChange}>
+          <option >--select you role--</option>
+          <option value = "Admin" className='text-gray-700'>admin</option>
+          <option value = "Subadmin" className = "text-gray-700">sub admin</option>
+        </select>
       </div>
     </div>
     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
