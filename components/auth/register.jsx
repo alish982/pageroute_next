@@ -268,7 +268,7 @@ const options = [
         Sign Up
       </button>
     </div>
-    <p className = "inline">Already have an account ?&nbsp;</p>  <Link href = "/auth/login"><button className="bg-slate-500 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+    <p className = "inline">Already have an account?&nbsp;</p>  <Link href = "/auth/login"><button className="bg-slate-500 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Login
       </button></Link>
       {showPopup.status && <Success showPopup = {showPopup} setShowPopup={setShowPopup}/>}
