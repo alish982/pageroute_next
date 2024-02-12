@@ -1,9 +1,14 @@
 import UserList from "@/components/user/List";
+import Layout from "@/components/layout/layout"
 
 function UserListing() {
 
 return (
- <UserList/>
+    <>
+    <Layout />
+    <UserList/>
+    </>
+
     )
 }
 

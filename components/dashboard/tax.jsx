@@ -4,7 +4,7 @@ import {instanceOfAxios} from "../others/localstorage";
 import axios from 'axios';
 import Pagination from '../others/pagination'
 
-function UserList() {
+function Tax() {
 
   const [user, setUser] = useState([])
   let [page, setPage] = useState(1)
@@ -19,8 +19,8 @@ function UserList() {
   })
 
   const test_it = async () => {
-    await instanceOfAxios.get(`user?page=` + page + "&per_page=" + perpage,
-    //  {
+    await instanceOfAxios.get(`tax?page=` + page + "&per_page=" + perpage, 
+    // {
     //   method: "GET",
     //   headers: {
     //     'Authorization': `Bearer ${access_token}`,
@@ -52,8 +52,8 @@ function UserList() {
 
 return(
 <div className = "pt-20" >
-<div className="pl-56 py-2 bg-gray-100 relative static shadow-md sm:rounded-lg">
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+<div className="px-56 pr-0 bg-gray-100 relative overflow-x-none overflow-y-none static shadow-md sm:rounded-lg">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase ">
             <tr>
                 <th scope="col" className="p-4">
@@ -62,32 +62,14 @@ return(
                         <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
                     </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
-                    name
+                <th scope="col" className="px-6 py-3 uppercase">
+                Name
+               </th>
+                <th scope="col" className="px-6 py-3 uppercase">
+                Rate	
                 </th>
-                <th scope="col" className="px-5 py-3">
-                    email
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    role
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    comapany
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    phone
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    address
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    last login
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    status
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    update
+                <th scope="col" className="px-6 py-3 uppercase">
+                Description	
                 </th>
             </tr>
         </thead>
@@ -100,37 +82,14 @@ return(
                         <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                     </div>
                 </td>
-                <td scope="row" className="px-4 py-4">
+                <td scope="row" className="px-6 py-4">
                     {post.name}
                 </td>
-                <td className="px-4 py-4">
-                {post.email}
+                <td scope="row" className="px-6 py-4">
+                    {post.rate}
                 </td>
-                <td className="px-4 py-4">
-                {post.user_type}
-                </td>
-                <td className="px-4 py-4">
-                    {post.company}
-                </td>
-                <td className="px-4 py-4">
-                    {post.phone}
-                </td>
-                <td className="px-4 py-4">
-                    {post.address}
-                </td>
-                <td className="px-4 py-4">
-                    {post.last_login_ip}
-                </td>
-                <td className="px-4 py-4">
-                    {post.is_active ? <div className='py-1 px-2 text-green-900 bg-green-200 inline-block rounded'>active</div>
-                          : <div className="py-1 px-2 text-red-900 bg-red-200 inline-block rounded">inactive</div>}
-                </td>
-                <td className="px-4 py-4">
-                    
-                <Link
-                    className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end " href={`/user/update/${post.id}`}>
-                    Update 
-                </Link>
+                <td className="px-6 py-4">
+                {post.description}
                 </td>
             </tr>
             )}
@@ -139,22 +98,8 @@ return(
     
 </div>
 <Pagination setPage={setPage} page={page} />
-    {/* <div className = "w-full overflow-y-auto h-screen">
-        <table className = "table-auto w-full">
-            <thead className = "border-b ">
-                <tr className = "text-left bg-[#F8F8F8] ">
-                    <th className =  "px-4">
-                        <input type = "checkbox" className = ""
-                    </th>
-
-                </tr>
-
-            </thead>
-        </table>
-        
-    </div> */}
 </div>
 
 )}
 
-export default UserList;
+export default Tax;

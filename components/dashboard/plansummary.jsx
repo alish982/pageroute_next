@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState} from "react";
 import Link from "next/link";
-import { access_token } from "../others/localstorage";
+import {instanceOfAxios} from "../others/localstorage";
 import axios from 'axios';
 
 
@@ -11,17 +11,22 @@ function Dashboard() {
   const [subData, setSubData] = useState([])
 
   const test_it = async () => {
-    const response = await axios.get('https://nitvcrmapi.truestreamz.com/api/v1/dashboard/plan_summary', {
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
-      }})
+    const response = await instanceOfAxios.get('dashboard/plan_summary', 
+    // {
+    //   headers: {
+    //     'Authorization': `Bearer ${access_token}`,
+    //   }}
+    )
+
     setPlan(response.data.data)
     console.log(response.data.data)     
     
-    const newresponse = await axios.get('https://nitvcrmapi.truestreamz.com/api/v1/dashboard/subscription_summary', {
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
-      }})
+    const newresponse = await instanceOfAxios.get('dashboard/subscription_summary', 
+    // {
+    //   headers: {
+    //     'Authorization': `Bearer ${access_token}`,
+    //   }}
+      )
     setSubData(newresponse.data.data)
     console.log(newresponse.data.data)
   
@@ -36,14 +41,14 @@ function Dashboard() {
   },[])   
 
   return (
-    <div className=" bg-gray-100 flex flex-col px-20 py-20 ">
-      <div className="-m-1.5 overflow-x-auto">
+    <div className=" bg-gray-100 flex flex-col px-80 pt-20 pr-0">
+      <div className="overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="overflow-hidden">
             <label className="text-2xl  text-gray-700  bg-slate-300 rounded uppercase font-mono px-6 py-1.5">
               PLAN SUMMARY
             </label>
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <table className="w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead>
                 <tr>
                   <th
@@ -150,15 +155,6 @@ function Dashboard() {
               </table>
             <hr />
             <br></br>
-            <Link  href="/" ><button
-              className="inline text-xl px-3 py-1.5 rounded font-bold text-white bg-slate-500 inline-block "
-            >
-             Back to Register</button>
-            </Link><br></br><br></br>
-            <Link href = "/user">
-              <button className = "bg-slate-500 inline-block text-l text-white border-2 p-2 mb-2 rounded-md justify-end font-semibold " type = 'button'>
-                Users Details
-            </button></Link>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react"
 import axios from 'axios';
-import { access_token } from '../../../others/localstorage'
+import {instanceOfAxios} from "../../../others/localstorage";
 import { useFormik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Success from '../../../others/popup'
@@ -26,11 +26,13 @@ function Page({id}) {
   });
 
   const test_it = async (user) => {
-      const response = await axios.get(`https://nitvcrmapi.truestreamz.com/api/v1/user/${id}/detail`, {
-          method: "GET",
-        headers: {
-          'Authorization': `Bearer ${access_token}`,
-        }})
+      const response = await instanceOfAxios.get(`user/${id}/detail`, 
+      // {
+      //     method: "GET",
+      //   headers: {
+      //     'Authorization': `Bearer ${access_token}`,
+      //   }}
+        )
         console.log(response.data.data)
       setInitialValue(response.data.data)     
   }
@@ -44,13 +46,13 @@ function Page({id}) {
 
     onSubmit: async (values) => {
       console.log(values)
-         await axios.put(
-        `https://nitvcrmapi.truestreamz.com/api/v1/user/${id}`, values, 
-        { 
-          headers : {
-          'Authorization': `Bearer ${access_token}`,
-          }
-        }
+         await instanceOfAxios.put(
+        `user/${id}`, values, 
+        // { 
+        //   headers : {
+        //   'Authorization': `Bearer ${access_token}`,
+        //   }
+        // }
       ).then((data) => {
         setShowPopup(data.status)
         console.log(data)

@@ -4,11 +4,11 @@ import {instanceOfAxios} from "../others/localstorage";
 import axios from 'axios';
 import Pagination from '../others/pagination'
 
-function UserList() {
+function Invoice() {
 
   const [user, setUser] = useState([])
   let [page, setPage] = useState(1)
-  let [perpage, setPerPage] = useState(5)
+  let [perpage, setPerPage] = useState(4)
   const [showPopup, setShowPopup] = useState({
     status: false,
     message: "",
@@ -19,10 +19,11 @@ function UserList() {
   })
 
   const test_it = async () => {
-    await instanceOfAxios.get(`user?page=` + page + "&per_page=" + perpage,
-    //  {
+    await instanceOfAxios.get(`invoice?page=` + page + "&per_page=" + perpage + "&page=" + page + "&sort_by=number&sort_order=asc", 
+    // {
     //   method: "GET",
     //   headers: {
+    // https://nitvcrmapi.truestreamz.com/api/v1/invoice?per_page=25&page=1&sort_by=number&sort_order=asc
     //     'Authorization': `Bearer ${access_token}`,
     //   }
     // }
@@ -51,8 +52,8 @@ function UserList() {
   }, [page])
 
 return(
-<div className = "pt-20" >
-<div className="pl-56 py-2 bg-gray-100 relative static shadow-md sm:rounded-lg">
+<div className='pl-52 pt-20' >
+<div className="px-4 py-2 bg-gray-100 relative overflow-x-none overflow-y-none static shadow-md sm:rounded-lg">
     <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase ">
             <tr>
@@ -62,36 +63,35 @@ return(
                         <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
                     </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
-                    name
+                <th scope="col" className="px-6 py-3 uppercase">
+                   	
+                    Inv Number
+               </th>
+                <th scope="col" className="px-6 py-3 uppercase">
+                Inv Date
                 </th>
-                <th scope="col" className="px-5 py-3">
-                    email
+                <th scope="col" className="px-6 py-3 uppercase">
+                Due Date
+               </th>
+                <th scope="col" className="px-6 py-3 uppercase">
+                Customer Name	
                 </th>
-                <th scope="col" className="px-5 py-3">
-                    role
+                <th scope="col" className="px-6 py-3 uppercase">
+                Total Amount
+               </th>
+                <th scope="col" className="px-6 py-3 uppercase">
+                Due Amount
                 </th>
-                <th scope="col" className="px-5 py-3">
-                    comapany
+                <th scope="col" className="px-6 py-3 uppercase">
+                Status
                 </th>
-                <th scope="col" className="px-5 py-3">
-                    phone
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    address
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    last login
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    status
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    update
+                <th scope="col" className="px-2 py-3 uppercase">
+                update
                 </th>
             </tr>
         </thead>
         <tbody>
+            
           {user.map((post)=> 
             <tr key = {post.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
@@ -100,33 +100,32 @@ return(
                         <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                     </div>
                 </td>
-                <td scope="row" className="px-4 py-4">
-                    {post.name}
+                <td scope="row" className="px-6 py-4">
+                    {post.number}
                 </td>
-                <td className="px-4 py-4">
-                {post.email}
+                <td scope="row" className="px-6 py-4">
+                    {post.invoice_date}
                 </td>
-                <td className="px-4 py-4">
-                {post.user_type}
+                <td className="px-6 py-4">
+                {post.invoice_due_date}
                 </td>
-                <td className="px-4 py-4">
-                    {post.company}
+                <td className="px-6 py-4">
+                {post.customer.first_name} {post.customer.last_name}
                 </td>
-                <td className="px-4 py-4">
-                    {post.phone}
+                <td className="px-6 py-4">
+                  ¥{post.total}
                 </td>
-                <td className="px-4 py-4">
-                    {post.address}
+                <td className="px-6 py-4">
+                   ¥{post.due_amount}
                 </td>
-                <td className="px-4 py-4">
-                    {post.last_login_ip}
+                <td className="px-6 py-4">
+                    {post.status === "overdue" ? <div className='py-1 px-2 text-red-900 bg-red-200 inline-block rounded'>{post.status}</div>
+                    : <div className="py-1 px-2 text-green-900 bg-green-200  inline-block rounded">
+                                {post.status}</div>}&nbsp;&nbsp;
+                    { post.status_description ? <div className='py-1 px-2 text-red-500 inline-block rounded'>({post.status_description})</div> : <div></div> }
+
                 </td>
-                <td className="px-4 py-4">
-                    {post.is_active ? <div className='py-1 px-2 text-green-900 bg-green-200 inline-block rounded'>active</div>
-                          : <div className="py-1 px-2 text-red-900 bg-red-200 inline-block rounded">inactive</div>}
-                </td>
-                <td className="px-4 py-4">
-                    
+                <td className="px-2 py-4">
                 <Link
                     className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end " href={`/user/update/${post.id}`}>
                     Update 
@@ -139,22 +138,8 @@ return(
     
 </div>
 <Pagination setPage={setPage} page={page} />
-    {/* <div className = "w-full overflow-y-auto h-screen">
-        <table className = "table-auto w-full">
-            <thead className = "border-b ">
-                <tr className = "text-left bg-[#F8F8F8] ">
-                    <th className =  "px-4">
-                        <input type = "checkbox" className = ""
-                    </th>
-
-                </tr>
-
-            </thead>
-        </table>
-        
-    </div> */}
 </div>
 
 )}
 
-export default UserList;
+export default Invoice;

@@ -1,9 +1,18 @@
-import Register from "@/components/auth/register"
-function Homepage(){
-  return(<div>
-    <Register />
-  </div>)
-  
-}
+// import MainHomepage from "@/components/homepage"
 
-export default Homepage
+// function Homepage(){
+//   return(<>
+//     <MainHomepage />
+//   </>
+//   )
+// }
+// export default Homepage
+
+
+import MainHomepage from "@/components/homepage"
+
+export default function Login(){
+    return(
+        <MainHomepage />
+    )
+}
