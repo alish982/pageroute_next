@@ -28,13 +28,11 @@ const MainHomepage = () => {
     initialValues: initialValue,
 
     onSubmit: async (values) => {
-     
 
       let formData = new FormData();
       formData.append('username', values.username);
       formData.append('password', values.password);
-      //console.log(formData)
-      //console.log(values)
+
       let data = await fetch(
         'https://nitvcrmapi.truestreamz.com/api/v1/user/login',
         {
@@ -44,21 +42,13 @@ const MainHomepage = () => {
       )
       let response = await data.json();
       localStorage.setItem('token_ho_yo', response.access_token);
-      
-      // console.log(data)
-      // console.log("data")
-      // if (data.status === 200){
-        
-      // }
 
       if (data.status === 200) {
           
           
           router.push('/dash')
           Cookies.set("auth", true)
-          console.log("cookie", Cookies.get())
-          
-         
+
         setShowPopup({
           status: true,
           message: 'Success, Thankyou',

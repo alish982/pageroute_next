@@ -70,11 +70,6 @@ const Register = () => {
     return () => clearTimeout(timer);
   }, [showPopup]);
 
-  const options = [
-    { value: 'admin', label: 'admin' },
-    { value: 'subadmin', label: 'subadmin' },
-  ];
-
   return (
     <div className="bg-slate-100 px-96 pt-24 pr-32 ">
       <label className="text-3xl font-bold text-gray-600 uppercase">

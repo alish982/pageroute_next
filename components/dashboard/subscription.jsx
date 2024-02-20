@@ -1,38 +1,40 @@
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { instanceOfAxios } from '../others/localstorage';
-import axios from 'axios';
-import Pagination from '../others/pagination';
-import Button from './button';
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { instanceOfAxios } from "../others/localstorage";
+import axios from "axios";
+import Pagination from "../others/pagination";
+import Button from "./button";
 
-function Invoice() {
+function Subscription() {
   const [user, setUser] = useState([]);
   let [page, setPage] = useState(1);
   let [perpage, setPerPage] = useState(4);
-  let [search, setSearch] = useState('');
-  let [sort, setSort] = useState('asc');
-  let [filter, setFilter] = useState('all');
-  let [sortBy, setSortBy] = useState('number');
+  let [search, setSearch] = useState("");
+  let [sort, setSort] = useState("asc");
+  let [filter, setFilter] = useState("live");
+  let [sortBy, setSortBy] = useState("created_at");
   let [show, setShow] = useState(false);
 
   const test_it = async () => {
     await instanceOfAxios
       .get(
-        `invoice?per_page=` +
+        `subscription?per_page=` +
           perpage +
-          '&page=' +
+          "&page=" +
           page +
-          '&sort_by=' +
+          "&sort_by=" +
           sortBy +
-          '&sort_order=' +
+          "&sort_order=" +
           sort +
-          '&search=' +
+          "&search=" +
           search +
-          '&filter=' +
+          "&filter=" +
           filter
       )
       .then((response) => {
         setUser(response.data.data.items);
+        console.log(response.data);
+        console.log(response.data.data.item);
         setPage(response.data.data.page);
       });
   };
@@ -48,14 +50,16 @@ function Invoice() {
   }
 
   function handleOrder() {
-    console.log('working');
-    sort === 'asc' ? setSort('desc') : setSort('asc')
+    console.log("working");
+    sort === "asc" ? setSort("desc") : setSort("asc");
   }
 
   return (
     <div className="pl-52 pt-20">
       <div className="flex">
-        <label className="pl-8 pt-2 pb-2 text-4xl font-sans">Invoice</label>
+        <label className="pl-8 pt-2 pb-2 text-4xl font-sans">
+          Subscriptions
+        </label>
         <div className="pl-96 flex pt-1">
           <input
             className="border border-slate-400 h-12 rounded text-slate-400"
@@ -71,63 +75,56 @@ function Invoice() {
           <Button onClick={() => setShow(!show)} />
           <div>
             {show ? (
-              <ul className="absolute top-3 right-40 bg-orange-200 inlibe-block pt-1 pl-2 pr-2 rounded text-gray-700">
+              <ul className="absolute top-3 right-40 bg-orange-200 inlibe-block pt-1 pl-1 pr-2 rounded text-gray-700">
                 <li
                   onClick={() => {
-                    setFilter("all");
+                    setFilter("live");
 
                     setShow(!show);
                   }}
                 >
-                  all
+                  live
                 </li>
                 <hr className="border- border-slate-400" />
                 <li
                   onClick={() => {
-                    setFilter("sent");
+                    setFilter("future");
 
                     setShow(!show);
                   }}
                 >
-                  sent
+                  future
                 </li>
                 <hr className="border- border-slate-400" />
                 <li
                   onClick={() => {
-                    setFilter("paid"), setShow(!show);
+                    setFilter("cancelled"), setShow(!show);
                   }}
                 >
-                  paid
+                  cancelled
                 </li>
                 <hr className="border- border-slate-400" />
                 <li
                   onClick={() => {
-                    setFilter("overdue"), setShow(!show);
+                    setFilter("non_renewing"), setShow(!show);
                   }}
                 >
-                  overdue
+                  non_renewing
                 </li>
                 <hr className="border- border-slate-400" />
                 <li
                   onClick={() => {
-                    setFilter("partially_paid"), setShow(!show);
+                    setFilter("extra_charge"), setShow(!show);
                   }}
                 >
-                  partially_paid
+                  extra_charge
                 </li>
                 <hr className="border- border-slate-400" />
-                <li
-                  onClick={() => {
-                    setFilter("unpaid"), setShow(!show);
-                  }}
-                >
-                  unpaid
-                </li>
               </ul>
             ) : null}
           </div>
           <Link href="/auth/cus_register">
-            <button className=" ml-3 px-16 border border-slate-400 h-12 rounded text-slate-400 bg-[#309fed] hover:bg-[#1776BD] text-white font-bold">
+            <button className=" ml-3 px-8 border border-slate-400 h-12 rounded text-slate-400 bg-[#309fed] hover:bg-[#1776BD] text-white font-bold">
               + Add New
             </button>
           </Link>
@@ -152,38 +149,40 @@ function Invoice() {
               <th
                 scope="col"
                 className="px-6 py-3 uppercase"
-                onClick={handleOrder}
+                onClick={() => {
+                  setSortBy("code"), handleOrder();
+                }}
               >
-                Inv Number
+                Code
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 uppercase"
                 onClick={() => {
-                  setSortBy("invoice_date"), handleOrder();
+                  setSortBy("plan_number"), handleOrder();
                 }}
               >
-                Inv Date
+                Plan No.
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 uppercase"
                 onClick={() => {
-                  setSortBy("invoice_due_date"), handleOrder();
+                  setSortBy("customer_name"), handleOrder();
                 }}
               >
-                Due Date
+                Customer
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 uppercase"
+                onClick={() => {
+                  setSortBy("plan_name"), handleOrder();
+                }}
+              >
+                Plan
               </th>
               <th scope="col" className="px-6 py-3 uppercase">
-                Customer Name
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 uppercase"
-                onClick={() => {
-                  setSortBy("total"), handleOrder();
-                }}
-              >
                 Total Amount
               </th>
               <th
@@ -193,7 +192,16 @@ function Invoice() {
                   setSortBy("due_amount"), handleOrder();
                 }}
               >
-                Due Amount
+                Billings Remain
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 uppercase"
+                onClick={() => {
+                  setSortBy("created_at"), handleOrder();
+                }}
+              >
+                Created On
               </th>
               <th
                 scope="col"
@@ -203,9 +211,6 @@ function Invoice() {
                 }}
               >
                 Status
-              </th>
-              <th scope="col" className="px-2 py-3 uppercase">
-                update
               </th>
             </tr>
           </thead>
@@ -231,24 +236,26 @@ function Invoice() {
                   </div>
                 </td>
                 <td scope="row" className="px-6 py-4">
-                  {post.number}
+                  {post.code}
                 </td>
                 <td scope="row" className="px-6 py-4">
-                  {post.invoice_date}
+                  {post.plan_number}
                 </td>
-                <td className="px-6 py-4">{post.invoice_due_date}</td>
+
                 <td className="px-6 py-4">
                   {post.customer.first_name} {post.customer.last_name}
                 </td>
+                <td className="px-6 py-4">{post.plan.name}</td>
                 <td className="px-6 py-4">¥{post.total}</td>
-                <td className="px-6 py-4">¥{post.due_amount}</td>
+                <td className="px-6 py-4">¥{post.billing_cycle}</td>
+                <td className="px-6 py-4">¥{post.created_at}</td>
                 <td className="px-6 py-4">
-                  {post.status === "overdue" ? (
-                    <div className="py-1 px-2 text-red-900 bg-red-200 inline-block rounded">
+                  {post.status === "live" ? (
+                    <div className="py-1 px-2 text-green-900 bg-green-200 inline-block rounded">
                       {post.status}
                     </div>
                   ) : (
-                    <div className="py-1 px-2 text-green-900 bg-green-200  inline-block rounded">
+                    <div className="py-1 px-2 text-red-900 bg-red-200  inline-block rounded">
                       {post.status}
                     </div>
                   )}
@@ -261,14 +268,14 @@ function Invoice() {
                     <div></div>
                   )}
                 </td>
-                <td className="px-2 py-4">
+                {/* <td className="px-2 py-4">
                   <Link
                     className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end "
                     href={`/user/update/${post.id}`}
                   >
                     Update
                   </Link>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
@@ -279,4 +286,4 @@ function Invoice() {
   );
 }
 
-export default Invoice;
+export default Subscription;

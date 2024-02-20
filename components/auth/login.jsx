@@ -29,8 +29,8 @@ const Home = () => {
       let formData = new FormData();
       formData.append('username', values.username);
       formData.append('password', values.password);
-      //console.log(formData)
-      //console.log(values)
+      console.log("formData")
+      console.log(formData)
       const data = await fetch(
         'https://nitvcrmapi.truestreamz.com/api/v1/user/login',
         {

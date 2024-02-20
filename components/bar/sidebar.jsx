@@ -31,27 +31,19 @@ function Sidebar() {
             <li>
               <Link
                 href="/dash"
-                className="flex items-center pt-2 pl-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 hover:font-serif hover:font-bold hover:text-xl  active:bg-gray-500  dark:hover:bg-gray-700 group"
+                className="flex items-center pt-2 pl-2 active:text-[#309fed] rounded-lg dark:text-white hover:bg-gray-100 hover:font-serif hover:font-bold hover:text-xl  active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
+                <Image src="/dashboardLogo.svg" alt="" width="21" height="21" />
                 <span className="ms-3">Dashboard</span>
               </Link>
             </li>
             <li>
               <Link
                 href="/dash/customer"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 active:bg-gray-500 hover:font-serif hover:font-bold hover:text-xl  dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-sm-gray-900 rounded-lg dark:text-white hover:bg-gray-100 active:bg-gray-500 hover:font-serif hover:font-bold hover:text-xl  dark:hover:bg-gray-700 group"
               >
-                <span className="flex-1 ms-3 whitespace-nowrap">customer</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/auth/cus_register"
-                className="flex items-center p-2 text-gray-900 hover:font-serif hover:font-bold hover:text-xl rounded-lg dark:text-white hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
-              >
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Add customer
-                </span>
+                <Image src="/customersLogo.svg" alt="" width="21" height="21" />
+                <span className="flex-1 ms-3 whitespace-nowrap">Customer</span>
               </Link>
             </li>
             <li>
@@ -59,7 +51,8 @@ function Sidebar() {
                 href="/dash/payment"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
-                <span className="flex-1 ms-3 whitespace-nowrap">payment</span>
+                <Image src="/paymentsLogo.svg" alt="" width="21" height="21" />
+                <span className="flex-1 ms-3 whitespace-nowrap">Payment</span>
               </Link>
             </li>
             <li>
@@ -67,23 +60,17 @@ function Sidebar() {
                 href="/user"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
+                <Image src="/dashboardLogo.svg" alt="" width="21" height="21" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
               </Link>
             </li>
             <li>
               <Link
-                href="/auth/register"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
-              >
-                <span className="flex-1 ms-3 whitespace-nowrap">Add user</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/dash"
+                href="/dash/subscription"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
-                <span className="flex-1 ms-3 whitespace-nowrap">Plans</span>
+                <Image src="/subscriptionsLogo.svg" alt="" width="21" height="21" />
+                <span className="flex-1 ms-3 whitespace-nowrap">Subscription</span>
               </Link>
             </li>
             <li>
@@ -91,6 +78,7 @@ function Sidebar() {
                 href="/dash/invoice"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
+                <Image src="/invoicesLogo.svg" alt="" width="21" height="21" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Invoice</span>
               </Link>
             </li>
@@ -99,9 +87,8 @@ function Sidebar() {
                 href="/dash/product"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500  dark:hover:bg-gray-700 group"
               >
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Products
-                </span>
+                <Image src="/productsLogo.svg" alt="" width="21" height="21" />
+                <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
               </Link>
             </li>
             <li>
@@ -109,6 +96,7 @@ function Sidebar() {
                 href="/dash/tax"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 hover:font-serif hover:font-bold hover:text-xl hover:bg-gray-100 active:bg-gray-500 dark:hover:bg-gray-700 group"
               >
+                <Image src="/taxesLogo.svg" alt="" width="21" height="21" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Tax</span>
               </Link>
             </li>

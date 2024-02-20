@@ -50,95 +50,113 @@ function UserList() {
     test_it()
   }, [page])
 
-return(
-<div className = "pt-20" >
-<div className="pl-56 py-2 bg-gray-100 relative static shadow-md sm:rounded-lg">
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+return (
+  <div className="pt-20">
+    <div className="flex justify-between item-center">
+        <label className="pt-2 pl-60 text-4xl font-sans ">Users</label> 
+      <Link href="/auth/register">
+        <button className="my-1 ml-2 mr-3 px-20 border border-slate-400 h-12 rounded text-slate-400 bg-[#309fed] hover:bg-[#1776BD] text-white font-bold">
+          + Add New
+        </button>
+      </Link>
+    </div>
+    <div className="pl-56 py-2 bg-gray-100 relative static shadow-md sm:rounded-lg">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase ">
-            <tr>
-                <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-                    </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    name
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    email
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    role
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    comapany
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    phone
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    address
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    last login
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    status
-                </th>
-                <th scope="col" className="px-5 py-3">
-                    update
-                </th>
-            </tr>
+          <tr>
+            <th scope="col" className="p-4">
+              <div className="flex items-center">
+                <input
+                  id="checkbox-all-search"
+                  type="checkbox"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label htmlFor="checkbox-all-search" className="sr-only">
+                  checkbox
+                </label>
+              </div>
+            </th>
+            <th scope="col" className="px-6 py-3">
+              name
+            </th>
+            <th scope="col" className="px-5 py-3">
+              email
+            </th>
+            <th scope="col" className="px-5 py-3">
+              role
+            </th>
+            <th scope="col" className="px-5 py-3">
+              comapany
+            </th>
+            <th scope="col" className="px-5 py-3">
+              phone
+            </th>
+            <th scope="col" className="px-5 py-3">
+              address
+            </th>
+            <th scope="col" className="px-5 py-3">
+              last login
+            </th>
+            <th scope="col" className="px-5 py-3">
+              status
+            </th>
+            <th scope="col" className="px-5 py-3">
+              update
+            </th>
+          </tr>
         </thead>
         <tbody>
-          {user.map((post)=> 
-            <tr key = {post.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <td scope="row" className="px-4 py-4">
-                    {post.name}
-                </td>
-                <td className="px-4 py-4">
-                {post.email}
-                </td>
-                <td className="px-4 py-4">
-                {post.user_type}
-                </td>
-                <td className="px-4 py-4">
-                    {post.company}
-                </td>
-                <td className="px-4 py-4">
-                    {post.phone}
-                </td>
-                <td className="px-4 py-4">
-                    {post.address}
-                </td>
-                <td className="px-4 py-4">
-                    {post.last_login_ip}
-                </td>
-                <td className="px-4 py-4">
-                    {post.is_active ? <div className='py-1 px-2 text-green-900 bg-green-200 inline-block rounded'>active</div>
-                          : <div className="py-1 px-2 text-red-900 bg-red-200 inline-block rounded">inactive</div>}
-                </td>
-                <td className="px-4 py-4">
-                    
+          {user.map((post) => (
+            <tr
+              key={post.id}
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td className="w-4 p-4">
+                <div className="flex items-center">
+                  <input
+                    id="checkbox-table-search-1"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label htmlFor="checkbox-table-search-1" className="sr-only">
+                    checkbox
+                  </label>
+                </div>
+              </td>
+              <td scope="row" className="px-4 py-4">
+                {post.name}
+              </td>
+              <td className="px-4 py-4">{post.email}</td>
+              <td className="px-4 py-4">{post.user_type}</td>
+              <td className="px-4 py-4">{post.company}</td>
+              <td className="px-4 py-4">{post.phone}</td>
+              <td className="px-4 py-4">{post.address}</td>
+              <td className="px-4 py-4">{post.last_login_ip}</td>
+              <td className="px-4 py-4">
+                {post.is_active ? (
+                  <div className="py-1 px-2 text-green-900 bg-green-200 inline-block rounded">
+                    active
+                  </div>
+                ) : (
+                  <div className="py-1 px-2 text-red-900 bg-red-200 inline-block rounded">
+                    inactive
+                  </div>
+                )}
+              </td>
+              <td className="px-4 py-4">
                 <Link
-                    className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end " href={`/user/update/${post.id}`}>
-                    Update 
+                  className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end "
+                  href={`/user/update/${post.id}`}
+                >
+                  Update
                 </Link>
-                </td>
+              </td>
             </tr>
-            )}
+          ))}
         </tbody>
-    </table>
-    
-</div>
-<Pagination setPage={setPage} page={page} />
+      </table>
+    </div>
+    <Pagination setPage={setPage} page={page} />
     {/* <div className = "w-full overflow-y-auto h-screen">
         <table className = "table-auto w-full">
             <thead className = "border-b ">
@@ -153,8 +171,7 @@ return(
         </table>
         
     </div> */}
-</div>
-
-)}
+  </div>
+);}
 
 export default UserList;
