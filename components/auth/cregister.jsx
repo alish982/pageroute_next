@@ -119,7 +119,7 @@ const Cregister = () => {
         Customer Signup
       </label>
       <form
-        enctype="multipart/form-data"
+        encType="multipart/form-data"
         onSubmit={formik.handleSubmit}
         className="w-full bg-gray-100 rounded px-8 pt-6 pb-8 mb-4"
       >

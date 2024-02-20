@@ -11,23 +11,11 @@ function Dashboard() {
   const [dashStat, setdashStat] = useState([]);
 
   const test_it = async () => {
-    const response = await instanceOfAxios.get(
-      "dashboard/plan_summary"
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${access_token}`,
-      //   }}
-    );
+    const response = await instanceOfAxios.get("dashboard/plan_summary");
 
     setPlan(response.data.data);
 
-    const statData = await instanceOfAxios.get(
-      "dashboard/statistics"
-      // {
-      //   headers:
-      //     'Authorization': `Bearer ${access_token}`,
-      //   }}
-    );
+    const statData = await instanceOfAxios.get("dashboard/statistics");
 
     console.log("data");
 
@@ -36,10 +24,6 @@ function Dashboard() {
 
     const newresponse = await instanceOfAxios.get(
       "dashboard/subscription_summary"
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${access_token}`,
-      //   }}
     );
     setSubData(newresponse.data.data);
   };
@@ -58,6 +42,80 @@ function Dashboard() {
             <label className="text-2xl font-bold  text-gray-700 rounded uppercase font-mono px-6 py-1.5">
               PLAN SUMMARY
             </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-blue-200 px-7 py-7 rounded">
+                <div>
+                  <Image
+                    src="/wcustomers.png"
+                    alt="none"
+                    height="50"
+                    width="50"
+                    className="bg-blue-300"
+                  />
+                  <label className="text-sm">customers</label>
+                </div>
+                <label className="text-4xl font-bold">
+                  {dashStat.total_customers}
+                </label>{" "}
+                <br></br>
+                <label className="text-xs">{dashStat.new_customers} New</label>
+              </div>
+              <div className="bg-gray-300 px-7 py-7 rounded">
+                <div>
+                  <Image
+                    src="/wsubscriptions.png"
+                    alt="none"
+                    height="50"
+                    width="50"
+                    className="bg-gray-300"
+                  />
+                  <label className="text-sm">Subscription</label>
+                </div>
+                <label className="text-4xl font-bold">
+                  {dashStat.total_Subscriptions}
+                </label>
+                <br></br>
+                {dashStat.new_Subscriptions}{" "}
+                <label className="text-xs">New</label>
+              </div>
+              <div className="bg-red-200 px-7 py-7 rounded">
+                <div>
+                  <Image
+                    src="/wproducts.png"
+                    alt="none"
+                    height="50"
+                    width="50"
+                    className="bg-red-300"
+                  />
+                  <label className="text-sm">Products</label>
+                </div>
+                <label className="text-4xl font-bold">
+                  {dashStat.total_products}
+                </label>
+                <br></br>
+                <label className="text-xs"> {dashStat.new_products} New</label>
+              </div>
+              <div className="bg-orange-200 px-7 py-7 rounded">
+                <div>
+                  <Image
+                    src="/winvoice.png"
+                    alt="none"
+                    height="45"
+                    width="45"
+                    className="bg-orange-300"
+                  />
+                  <label className="text-sm">Unpaid Invoice</label>
+                </div>
+                <label className="text-4xl font-bold">
+                  {dashStat.total_unpaid_invoices}
+                </label>
+                <br></br>
+
+                <label className="text-xs">
+                  {dashStat.new_unpaid_invoices} New
+                </label>
+              </div>
+            </div>
             <div className="flex w-[90%]">
               <table className="w-[75%] divide-y divide-gray-200 dark:divide-gray-700">
                 <thead>
@@ -98,90 +156,9 @@ function Dashboard() {
                   ))}
                 </tbody>
               </table>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-200 px-7 py-7 rounded">
-                  <div>
-                    <Image
-                      src="/wcustomers.png"
-                      alt="none"
-                      height="50"
-                      width="50"
-                      className="bg-blue-300"
-                    />
-                    <label className="text-sm">customers</label>
-                  </div>
-                  <label className="text-4xl font-bold">
-                    {dashStat.total_customers}
-                  </label>{" "}
-                  <br></br>
-                  <label className="text-xs">
-                    {dashStat.new_customers} New
-                  </label>
-                </div>
-                <div className="bg-gray-300 px-7 py-7 rounded">
-                  <div>
-                    <Image
-                      src="/wsubscriptions.png"
-                      alt="none"
-                      height="50"
-                      width="50"
-                      className="bg-gray-300"
-                    />
-                    <label className="text-sm">Subscription</label>
-                  </div>
-                  <label className="text-4xl font-bold">
-                    {dashStat.total_Subscriptions}
-                  </label>
-                  <br></br>
-                  {dashStat.new_Subscriptions}{" "}
-                  <label className="text-xs">New</label>
-                </div>
-                <div className="bg-red-200 px-7 py-7 rounded">
-                  <div>
-                    <Image
-                      src="/wproducts.png"
-                      alt="none"
-                      height="50"
-                      width="50"
-                      className="bg-red-300"
-                    />
-                    <label className="text-sm">Products</label>
-                  </div>
-                  <label className="text-4xl font-bold">
-                    {dashStat.total_products}
-                  </label>
-                  <br></br>
-                  <label className="text-xs">
-                    {" "}
-                    {dashStat.new_products} New
-                  </label>
-                </div>
-                <div className="bg-orange-200 px-7 py-7 rounded">
-                  <div>
-                    <Image
-                      src="/winvoice.png"
-                      alt="none"
-                      height="45"
-                      width="45"
-                      className="bg-orange-300"
-                    />
-                    <label className="text-sm">Unpaid Invoice</label>
-                  </div>
-                  <label className="text-4xl font-bold">
-                    {dashStat.total_unpaid_invoices}
-                  </label>
-                  <br></br>
-
-                  <label className="text-xs">
-                    {dashStat.new_unpaid_invoices} New
-                  </label>
-                </div>
-              </div>
             </div>
-
             <br></br>
             <br></br>
-
             <label className="text-2xl  text-gray-700 font-bold rounded uppercase font-mono px-6 py-1.5">
               Subscription Summary
             </label>

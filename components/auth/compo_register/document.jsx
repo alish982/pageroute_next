@@ -6,23 +6,21 @@ import React, { useState } from "react";
 const Document = ({ formik }) => {
   const [imgs, setImgs] = useState();
 
-  const handleChange = (e) => {
-    console.log(e.target.files);
-    const data = new FileReader();
+  // const handleChange = (e) => {
+  //   console.log(e.target.files);
+  //   const data = new FileReader();
 
-    data.addEventListener("load", () => {
-      formik.setFieldValue("residence_card_front", data.result);
-    });
-    data.readAsDataURL(e.target.files[0]);
-  };
-  console.log(imgs);
+  //   data.addEventListener("load", () => {
+  //     setImgs(data.result);
+  //     formik.setFieldValue("residence_card_front", data.result);
+  //   });
+  //   data.readAsDataURL(e.target.files[0]);
+  // };
+  // console.log(imgs);
 
   return (
     <div className="bg-slate-100 -mt-12">
-      <div
-       
-        className="w-full bg-gray-100 shadow-md rounded px-3 pt-14 pb-8 mb-4"
-      >
+      <div className="w-full bg-gray-100 shadow-md rounded px-3 pt-14 pb-8 mb-4">
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3">
             <label
@@ -79,7 +77,15 @@ const Document = ({ formik }) => {
               type="file"
               placeholder=""
               name="residence_card_front"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const data = new FileReader();
+                data.addEventListener("load", () => {
+                  const binaryStr = data.result;
+                  const blob = new Blob([binaryStr]);
+                  formik.setFieldValue("residence_card_front", blob);
+                });
+                data.readAsArrayBuffer(e.target.files[0]);
+              }}
               onBlur={formik.handleBlur}
             />
             <img src={imgs} alt="" />
@@ -98,8 +104,15 @@ const Document = ({ formik }) => {
               type="file"
               placeholder=""
               name="residence_card_back"
-              value={formik.values.residence_card_back}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const data = new FileReader();
+                data.addEventListener("load", () => {
+                  const binaryStr = data.result;
+                  const blob = new Blob([binaryStr]);
+                  formik.setFieldValue("residence_card_back", blob);
+                });
+                data.readAsArrayBuffer(e.target.files[0]);
+              }}
               onBlur={formik.handleBlur}
             />
           </div>
