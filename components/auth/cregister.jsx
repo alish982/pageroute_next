@@ -63,9 +63,6 @@ const Cregister = () => {
     initialValues: initialValue,
 
     onSubmit: async (values) => {
-      console.log("values start");
-      console.log(values);
-      console.log("values end");
       let formData = new FormData();
 
       for (const [key, value] of Object.entries(values)) {

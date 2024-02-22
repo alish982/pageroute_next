@@ -6,10 +6,8 @@ import { useFormik } from 'formik';
 import Success from '../components/others/popup';
 import Cookies from 'js-cookie'
 
-
-
 const MainHomepage = () => {
-  const [message, setMessage] = useState(''); // This will be used to show a message if the submission is successful
+  const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showPopup, setShowPopup] = useState({
     status: false,
@@ -100,8 +98,8 @@ const MainHomepage = () => {
       <div className="w-[40%] bg-slate-100 h-screen flex items-center justify-center">
         <div>
           <div className=" bg-slate-100 pr-28 pb-10 rounded">
-            <label className="text-3xl font-bold text-gray-600 uppercase">
-              User Login
+            <label className=" leading-loose font-custom font-[700] text-[#191D23] text-[25px]">
+              Welcome to CRM Portal
             </label>
             <form
               onSubmit={formik.handleSubmit}
@@ -109,7 +107,7 @@ const MainHomepage = () => {
             >
               <div className="mb-4">
                 <label
-                  className="block text-gray-700 text-lg font-bold mb-2"
+                  className="block text-gray-700 text-[14px] font-custom mb-2"
                   htmlFor="username"
                 >
                   Email
@@ -127,7 +125,7 @@ const MainHomepage = () => {
               </div>
               <div className="mb-6">
                 <label
-                  className="block text-gray-700 text-lg font-bold mb-2"
+                  className="block text-gray-700 text-[14px] text-[400] font-custom mb-2"
                   htmlFor="password"
                 >
                   Password

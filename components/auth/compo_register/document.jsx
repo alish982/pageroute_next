@@ -5,7 +5,9 @@ import React, { useState } from "react";
 
 const Document = ({ formik }) => {
   const [imgs, setImgs] = useState();
+  const [imgs1, setImgs1] = useState();
 
+  console.log(imgs);
   // const handleChange = (e) => {
   //   console.log(e.target.files);
   //   const data = new FileReader();
@@ -80,15 +82,44 @@ const Document = ({ formik }) => {
               onChange={(e) => {
                 const data = new FileReader();
                 data.addEventListener("load", () => {
-                  const binaryStr = data.result;
-                  const blob = new Blob([binaryStr]);
+                  const blob = new Blob([data.result]);
+                  const url = URL.createObjectURL(blob);
+                  setImgs(url);
                   formik.setFieldValue("residence_card_front", blob);
                 });
                 data.readAsArrayBuffer(e.target.files[0]);
               }}
               onBlur={formik.handleBlur}
             />
-            <img src={imgs} alt="" />
+            <div className="relative">
+              {imgs && (
+                <div ClassName="relative inline-block">
+                  <button
+                    className="absolute top-0 right-0 z-10 bg-white border border-black"
+                    onClick={() => {
+                      setImgs(null),
+                        formik.setFieldValue("resiidence_card_front", null);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              )}
+              {imgs && <img src={imgs} alt="Selected Image" />}
+            </div>
           </div>
 
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -107,14 +138,44 @@ const Document = ({ formik }) => {
               onChange={(e) => {
                 const data = new FileReader();
                 data.addEventListener("load", () => {
-                  const binaryStr = data.result;
-                  const blob = new Blob([binaryStr]);
+                  const blob = new Blob([data.result]);
+                  const url = URL.createObjectURL(blob);
+                  setImgs1(url);
                   formik.setFieldValue("residence_card_back", blob);
                 });
                 data.readAsArrayBuffer(e.target.files[0]);
               }}
               onBlur={formik.handleBlur}
             />
+            <div className="relative">
+              {imgs1 && (
+                <div ClassName="relative inline-block">
+                  <button
+                    className="absolute top-0 right-0 z-10 bg-white border border-black"
+                    onClick={() => {
+                      setImgs1(null);
+                      formik.setFieldValue("residence_card_back", null);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+            {imgs1 && <img src={imgs1} alt="Selected Image" />}
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 mb-2"></div>
