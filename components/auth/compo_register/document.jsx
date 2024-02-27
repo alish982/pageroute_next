@@ -75,7 +75,7 @@ const Document = ({ formik }) => {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
+              id="file-input-id1"
               type="file"
               placeholder=""
               name="residence_card_front"
@@ -97,8 +97,9 @@ const Document = ({ formik }) => {
                   <button
                     className="absolute top-0 right-0 z-10 bg-white border border-black"
                     onClick={() => {
-                      setImgs(null),
-                        formik.setFieldValue("resiidence_card_front", null);
+                      setImgs(''),
+                        formik.setFieldValue("residence_card_front", '');
+                        document.getElementById("file-input-id1").value = "";
                     }}
                   >
                     <svg
@@ -131,7 +132,7 @@ const Document = ({ formik }) => {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
+              id="file-input-id2"
               type="file"
               placeholder=""
               name="residence_card_back"
@@ -153,8 +154,9 @@ const Document = ({ formik }) => {
                   <button
                     className="absolute top-0 right-0 z-10 bg-white border border-black"
                     onClick={() => {
-                      setImgs1(null);
-                      formik.setFieldValue("residence_card_back", null);
+                      setImgs1('');
+                      formik.setFieldValue("residence_card_back", '');
+                      document.getElementById("file-input-id2").value = "";
                     }}
                   >
                     <svg

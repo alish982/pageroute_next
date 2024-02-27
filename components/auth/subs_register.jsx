@@ -13,8 +13,9 @@ import { instanceOfAxios } from "../others/localstorage";
 const SubRegister = () => {
   const [date, setDate] = useState(new Date());
   const [relation, setRelation] = useState([]);
-  const [product, setProduct] = useState([])
- 
+  const [product, setProduct] = useState([]);
+  const [product_id, setProductId] = useState("");
+
   const [optionCus, setOptionCus] = useState([]);
   const [showPopup, setShowPopup] = useState({
     status: false,
@@ -27,7 +28,7 @@ const SubRegister = () => {
     subscriber_name: "",
     subscriber_relation: "",
     customer_name: "",
-    product_name: ""
+    product_name: "",
   });
 
   const router = useRouter();
@@ -91,32 +92,36 @@ const SubRegister = () => {
 
           newRow.label = value.label;
           newRow.value = value.value;
+
           return newRow;
         })
       );
     });
 
-     const product_func = async () =>
-       await instanceOfAxios.get(`product`).then((res) => {
-         
-        console.log(res.data.data.items.status, "tue ")
+  const product_func = async () =>
+    await instanceOfAxios.get(`product`).then((res) => {
+      setProduct(
+        res.data.data.items.map((value) => {
+          let newRow = {};
+          console.log(value.id, "val");
+          newRow.label = value.name;
+          newRow.value = value.name;
+          newRow.id = value.id;
+          return newRow;
+        })
+      );
+    });
 
-         setProduct(
-           res.data.data.items.map((value) => {
-             let newRow = {};
-
-             newRow.label = value.name;
-             newRow.value = value.name;
-             return newRow;
-           })
-         );
-       });
-
+  // const product_plan = async () =>
+  //   await instanceOfAxios.get("product/" + product_id).then((res) => {
+  //     console.log(res, "product_plan");
+  //   });
 
   useEffect(() => {
     customer_func();
-   relation_func();
-   product_func()
+    relation_func();
+    product_func();
+    // product_plan();
   }, []);
 
   return (
@@ -218,13 +223,16 @@ const SubRegister = () => {
               }}
               onChange={(newValue) => {
                 formik.setFieldValue("product_name", newValue.value);
+                instanceOfAxios.get("product/" + product_id).then((res) => {
+                  console.log(res, "product_plan");
+                });
               }}
               onBlur={formik.handleBlur}
             />
           </div>
           <hr />
-         {console.log(product)}
-          <div className = "flex mb-10">
+
+          <div className="flex mb-10">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2"
@@ -242,7 +250,6 @@ const SubRegister = () => {
                 value={formik.values.mobile}
                 onChange={(newVal) => {
                   formik.setFieldValue("mobile", newVal.target.value);
-                  console.log(newVal.target.value);
                 }}
                 onBlur={formik.handleBlur}
               />
@@ -264,7 +271,6 @@ const SubRegister = () => {
                 value={formik.values.company}
                 onChange={(newVal) => {
                   formik.setFieldValue("company", newVal.target.value);
-                  console.log(newVal.target.value);
                 }}
                 onBlur={formik.handleBlur}
               />
@@ -285,7 +291,6 @@ const SubRegister = () => {
                 value={formik.values.company}
                 onChange={(newVal) => {
                   formik.setFieldValue("company", newVal.target.value);
-                  console.log(newVal.target.value);
                 }}
                 onBlur={formik.handleBlur}
               />
@@ -306,7 +311,6 @@ const SubRegister = () => {
                 value={formik.values.company}
                 onChange={(newVal) => {
                   formik.setFieldValue("company", newVal.target.value);
-                  console.log(newVal.target.value);
                 }}
                 onBlur={formik.handleBlur}
               />
