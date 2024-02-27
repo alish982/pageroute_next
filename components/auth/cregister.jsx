@@ -111,14 +111,14 @@ const Cregister = () => {
   };
 
   return (
-    <div className="bg-slate-100 pl-72 py-24 pr-10">
+    <div className=" pl-72 py-24 pr-10">
       <label className="pl-6 text-2xl font-bold text-gray-600 uppercase">
         Customer Signup
       </label>
       <form
         encType="multipart/form-data"
         onSubmit={formik.handleSubmit}
-        className="w-full bg-gray-100 rounded px-8 pt-6 pb-8 mb-4"
+        className="w-full rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3">
@@ -129,7 +129,7 @@ const Cregister = () => {
               Email
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className=" w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               type="email"
               name="email"
               placeholder="something@gmail.com"
@@ -146,7 +146,7 @@ const Cregister = () => {
               First Name
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 focus:outline-none focus:bg-white focus:border-blue-500"
               type="text"
               placeholder="Sandip"
               name="first_name"
@@ -163,7 +163,7 @@ const Cregister = () => {
               customer type
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               type="number"
               placeholder="either o or 1"
               name="customer_type"
@@ -181,7 +181,7 @@ const Cregister = () => {
               Phone
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               type="text"
               placeholder="9800000000"
               name="phone"
@@ -199,7 +199,7 @@ const Cregister = () => {
               Mobile
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               id="grid-first-name"
               type="text"
               placeholder="9800000000"
@@ -221,7 +221,7 @@ const Cregister = () => {
               Company
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               id="grid-first-name"
               type="text"
               placeholder="Ncell"
@@ -244,7 +244,7 @@ const Cregister = () => {
             </label>
 
             <DatePicker
-              className="appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
               id="grid-first-name"
               type="text"
               placeholder=""
@@ -298,7 +298,7 @@ const Cregister = () => {
 
         <p className="py-5 flex items-center justify-between">
           <button
-            className="w-32 h-12 bg-slate-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
+            className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Sign Up

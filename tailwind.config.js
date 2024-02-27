@@ -13,19 +13,7 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      fontFamily: {
-        custom: ["SFProText", "sans"],
-      },
-      fontWeight: {
-        bold: "750",
-      },
-    },
-    fontFace: {
-      SFProText: {
-        url: "./styles/SFProText.ttf",
-        format: "truetype",
-      },
-    },
+    }
   },
   plugins: [],
 };
