@@ -15,6 +15,7 @@ const SubRegister = () => {
   const [relation, setRelation] = useState([]);
   const [product, setProduct] = useState([]);
   const [product_id, setProductId] = useState("");
+  const [productplanID, setProductPlanID] = useState([])
 
   const [optionCus, setOptionCus] = useState([]);
   const [showPopup, setShowPopup] = useState({
@@ -103,7 +104,7 @@ const SubRegister = () => {
       setProduct(
         res.data.data.items.map((value) => {
           let newRow = {};
-          console.log(value.id, "val");
+          setProductId(value.id);
           newRow.label = value.name;
           newRow.value = value.name;
           newRow.id = value.id;
@@ -224,14 +225,14 @@ const SubRegister = () => {
               onChange={(newValue) => {
                 formik.setFieldValue("product_name", newValue.value);
                 instanceOfAxios.get("product/" + product_id).then((res) => {
-                  console.log(res, "product_plan");
+                  setProductPlanID(res.data.data.plans);
                 });
               }}
               onBlur={formik.handleBlur}
             />
           </div>
           <hr />
-
+  {productplanID.length > 0 ? <div></div> : <div></div>}
           <div className="flex mb-10">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label
