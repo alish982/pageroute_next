@@ -28,6 +28,7 @@ const PaymentRegi = () => {
   });
 
   const [initialValue, setValue] = useState({
+    ammount_recieved: "",
     subscriber_name: "",
     subscriber_relation: "",
     customer_name: "",
@@ -103,7 +104,6 @@ const PaymentRegi = () => {
     });
 
   const fetchData = () => {
-    console.log(dataEntered);
     if (dataEntered) {
       instanceOfAxios
         .get(
@@ -113,7 +113,7 @@ const PaymentRegi = () => {
         )
         .then((response) => {
           setUserInvoice(response.data.data.items);
-          console.log("rs rs");
+
           // setUserInvoice(
           //   response.data.data.items.map((row) => {
           //     return row;
@@ -122,6 +122,14 @@ const PaymentRegi = () => {
         });
     }
   };
+
+  // let totalAmount = 0;
+ 
+  //  let id = 1;
+  //  (formik.values[`ammount_recieved_${id}`]).forEach((val) => {
+  //  totalAmount += parseFloat(formik.values[`amount_received_${val.id}`]) || 0;
+  //  console.log(totalAmount, "total ammount")
+  //  })
 
   useEffect(() => {
     customer_func();
@@ -198,9 +206,13 @@ const PaymentRegi = () => {
                   type="text"
                   placeholder=""
                   name="subscriber_name"
-                  value={dueChecked ? dueAmt : ""}
+                  value={dueChecked ? dueAmt : formik.values.subscriber_name}
                   onChange={(newVal) => {
-                    formik.setFieldValue("subscriber_name", newVal.value);
+                    formik.setFieldValue(
+                      "subscriber_name",
+                      newVal.target.value
+                    );
+                    setDueChecked(false);
                   }}
                   onBlur={formik.handleBlur}
                 />
@@ -264,7 +276,7 @@ const PaymentRegi = () => {
                     type="text"
                     placeholder=""
                     name="subscriber_name"
-                    value={formik.values.subscriber_name}
+                    value=""
                     onChange={(newVal) => {
                       formik.setFieldValue("subscriber_name", newVal.value);
                     }}
@@ -287,7 +299,7 @@ const PaymentRegi = () => {
                 Apply to invoices immediately ?
               </label>
               <br />
-              <div className="mt-3 mb-4 flex">
+              <div className="mt-3 mb-8 flex">
                 <input type="radio" name="date" /> &nbsp;yes &nbsp; &nbsp;
                 <input type="radio" name="date" /> &nbsp;No <br></br>
               </div>
@@ -295,13 +307,92 @@ const PaymentRegi = () => {
               {dataEntered ? (
                 <div>
                   <label className="text-[16px] font-bold ">invoices </label>
-                  {userInvoice.map((val) => (
-                    <div key={val.id} className="flex">
-                     <table>
-                      
-                     </table>
+
+                  <table className="w-full mt-8 mb-14">
+                    <thead>
+                      <tr className="bg-slate-100 rounded ">
+                        <th className="pl-[20px] text-left py-3 ">Date</th>
+                        <th className="pl-[20px] text-left ">Invoice No</th>
+                        <th className="pl-[20px] text-left ">Invoice Amount</th>
+                        <th className="pl-[20px] text-left ">Due Amount</th>
+                        <th className="pl-[20px] text-left ">Payment</th>
+                      </tr>
+                    </thead>
+                    {userInvoice.map((val) => (
+                      <tbody className="">
+                        <tr key={val.id}>
+                          <td className="px-6 py-4 border-b border-slate-200">
+                            {val.invoice_date}
+                          </td>
+
+                          <td className="px-6 py-4  border-b border-slate-200">
+                            {val.number}
+                          </td>
+                          <td className="px-6 py-4  border-b border-slate-200">
+                            ¥ {val.due_amount}
+                          </td>
+                          <td className="px-6 py-4  border-b border-slate-200">
+                            ¥ {val.due_amount}
+                          </td>
+                          <td className="px-6 py-4  border-b border-slate-200">
+                            {}
+                            <div className="flex flex-col">
+                              <input
+                                type="number"
+                                value={
+                                  formik.values[`ammount_recieved_${val.id}`]
+                                }
+                                onChange={(newVal) =>
+                                  formik.setFieldValue(
+                                    `ammount_recieved_${val.id}`,
+                                    newVal.target.value
+                                  )
+                                }
+                                className="h-[34px] w-[200px] border border-slate-200 px-2 m-2"
+                              />{" "}
+                              <label className="px-3 text-blue-600">
+                                Pay In Full
+                              </label>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    ))}
+                  </table>
+                  <div className="pl-64 ">
+                    {" "}
+                    <div className="flex pl-96">
+                      <div className="text-right">
+                        <p className=" font-semibold text-[13px] opacity-[0.7] mb-8">
+                          {" "}
+                          Sub Total :
+                        </p>
+                        <p className="opacity-[0.7] mb-2">Amount recived:</p>
+                        <p className="opacity-[0.7] mb-2">
+                          Amount Used for Payment:
+                        </p>
+                        <p className="opacity-[0.7]">Amount in Excess</p>
+                      </div>
+                      <div>
+                        <div className="text-right px-32">
+                          <p className=" font-semibold text-[13px] opacity-[0.7] mb-8">
+                            {" "}
+                            ¥ {dueAmt}
+                          </p>
+                          <p className="opacity-[0.7] mb-2">
+                            ¥{formik.values.subscriber_name}
+                          </p>
+                          {userInvoice.map((val) => (
+                            <p className="opacity-[0.7] mb-2">
+                              {formik.values[`ammount_recieved_${val.id}`]}
+                            </p>
+                          ))}
+
+                          <p className="opacity-[0.7]"></p>
+                        </div>
+                      </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               ) : (
                 <div></div>
@@ -316,20 +407,12 @@ const PaymentRegi = () => {
             </div>
 
             <div className="py-5 flex items-center justify-between">
-              <Link href="/auth/sec_subs_redi">
-                <button
-                  className="w-32 h-12 bg-slate-200 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Save
-                </button>
-              </Link>
               <Link href="/dash/payment">
                 <button
                   className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
-                  Cancel
+                  Save
                 </button>
               </Link>
             </div>

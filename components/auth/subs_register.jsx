@@ -15,9 +15,9 @@ const SubRegister = () => {
   const [relation, setRelation] = useState([]);
   const [product, setProduct] = useState([]);
   const [product_id, setProductId] = useState("1");
-  const [planID, setPlanID] = useState([]);
-  const [productPlan, setProductPlan] = useState([]);
-  const [raiseInvoice, setRaiseInvoice] = useState('')
+  const [planID, setPlanID] = useState('');
+  const [productPlan, setProductPlan] = useState('0');
+  const [raiseInvoice, setRaiseInvoice] = useState("");
 
   const [optionCus, setOptionCus] = useState([]);
   const [showPopup, setShowPopup] = useState({
@@ -121,7 +121,6 @@ const SubRegister = () => {
     await instanceOfAxios.get("product/" + product_id).then((res) => {
       setProductPlan(
         res.data.data.plans.map((row) => {
-          console.log(row.name, row.id, "name and d=d");
           row.label = row.name;
           row.value = row.id;
           return row;
@@ -136,7 +135,7 @@ const SubRegister = () => {
     product_planFunc();
 
     // product_plan();
-  }, []);
+  }, [product_id]);
 
   return (
     <div className=" pl-72 py-8 pr-10">
@@ -248,6 +247,7 @@ const SubRegister = () => {
                   onChange={(newValue) => {
                     console.log(newValue, "product new value");
                     setProductId(newValue.value);
+                    product_planFunc();
                     formik.setFieldValue("product_name", newValue.label);
                     setPlanID(newValue.active_plan_count);
                   }}
@@ -257,7 +257,7 @@ const SubRegister = () => {
             </div>
 
             <div>
-              {planID !== 0 ? (
+              {planID >= 1 ? (
                 <div className="flex mb-3">
                   <div className="w-full md:w-1/2 md:mb-0">
                     <label className=" " htmlFor="grid-first-name">
