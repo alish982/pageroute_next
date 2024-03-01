@@ -217,7 +217,7 @@ function UserPay() {
                   }}
                 />
               </div>
-              <Link href="/auth/cus_register">
+              <Link href="/auth/payment">
                 <button className=" bg-[#309fed] hover:bg-[#1776BD] text-white font-bold py-2 px-4 w-[150px] h-[40px] rounded null">
                   + Add New
                 </button>
