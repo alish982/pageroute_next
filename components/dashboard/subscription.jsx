@@ -448,12 +448,10 @@ function Subscription() {
                     >
                       Status
                     </th>
-                    <th className = "px-6 py-4 text-gray-800">
-                      Update
-                    </th>
+                    <th className="px-6 py-4 text-gray-800">Update</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-nowrap">
                   {user.map((post) => (
                     <tr
                       key={post.id}

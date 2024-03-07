@@ -15,8 +15,8 @@ const SubRegister = () => {
   const [relation, setRelation] = useState([]);
   const [product, setProduct] = useState([]);
   const [product_id, setProductId] = useState("1");
-  const [planID, setPlanID] = useState('');
-  const [productPlan, setProductPlan] = useState('0');
+  const [planID, setPlanID] = useState("");
+  const [productPlan, setProductPlan] = useState("0");
   const [raiseInvoice, setRaiseInvoice] = useState("");
 
   const [optionCus, setOptionCus] = useState([]);
@@ -28,15 +28,26 @@ const SubRegister = () => {
   });
 
   const [initialValue, setValue] = useState({
+    billing_cycle: "",
+    customer_id: "",
+    customer_name: "",
+    invoice_creation_day: "",
+    plan_id: "",
+    plan_number: "",
+    proudct_id: "",
+    product_name: "",
+    start_date: "",
     subscriber_name: "",
     subscriber_relation: "",
-    customer_name: "",
-    product_planname: "",
-    product_name: "",
-    product_plan: "",
-    product_price: "",
-    product_ammount: "",
-    plan_type: "",
+    plan: {
+      id: "",
+      quantity: "",
+      price: "",
+      product_id: "",
+      interval_unit: "",
+      name: "",
+      setup_fee: "",
+    },
   });
 
   const router = useRouter();
@@ -45,15 +56,17 @@ const SubRegister = () => {
     initialValues: initialValue,
 
     onSubmit: async (values) => {
-      let formData = new FormData();
-
-      for (const [key, value] of Object.entries(values)) {
-        formData.append(key, value);
-      }
-      let data = await instanceOfAxios
+      const data = await instanceOfAxios
         .post(
-          "https://nitvcrmapi.truestreamz.com/api/v1/customer/register",
-          formData
+          "subscription", 
+           {
+          method: 'POST',
+          body: JSON.stringify(values),
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+          
         )
         .then((data) => {
           setShowPopup(data.status);
@@ -165,11 +178,7 @@ const SubRegister = () => {
             <h1 className="text-3xl font-semibold"> Create Subscription </h1>
           </div>
         </div>
-        <form
-          encType="multipart/form-data"
-          onSubmit={formik.handleSubmit}
-          className="w-full rounded px-8 "
-        >
+        <form onSubmit={formik.handleSubmit} className="w-full rounded px-8 ">
           <div className="w-4/7 p-6">
             <div className="py-8 grid grid-flow-row xl:grid-cols-2 gap-x-8 gap-y-4 border-b border-[#e5e5e5]">
               <div className="flex flex-col gap-y-2 form-group ">
@@ -245,7 +254,6 @@ const SubRegister = () => {
                     value: formik.values.product_name,
                   }}
                   onChange={(newValue) => {
-                    console.log(newValue, "product new value");
                     setProductId(newValue.value);
                     product_planFunc();
                     formik.setFieldValue("product_name", newValue.label);
@@ -270,7 +278,7 @@ const SubRegister = () => {
                       type="text"
                       options={productPlan}
                       placeholder="plan Name"
-                      name="product_planname"
+                      name=""
                       value={{
                         label: formik.values.product_planname,
                         value: formik.values.product_planname,
@@ -486,14 +494,12 @@ const SubRegister = () => {
             </div>
 
             <div className="py-5 flex items-center justify-between">
-              <Link href="/auth/sec_subs_redi">
-                <button
-                  className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Continue
-                </button>
-              </Link>
+              <button
+                className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Continue
+              </button>
             </div>
           </div>
         </form>

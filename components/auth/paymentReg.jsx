@@ -13,12 +13,16 @@ import { instanceOfAxios } from "../others/localstorage";
 const PaymentRegi = () => {
   const [date, setDate] = useState(new Date());
   const [optionCus, setOptionCus] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(optionCus[0]);
   const [paymentMode, setpaymentMode] = useState([]);
   const [dueChecked, setDueChecked] = useState(false);
   const [dueAmt, setDueAmt] = useState([]);
+
   const [dataEntered, setDataEntered] = useState(false);
   const [userInvoice, setUserInvoice] = useState([]);
   const [customerID, setCustomerID] = useState([]);
+  const [paymentValue, setPaymentValue] = useState(0);
+  let [cusPage, setcusPage] = useState(1);
 
   const [showPopup, setShowPopup] = useState({
     status: false,
@@ -82,15 +86,17 @@ const PaymentRegi = () => {
   });
 
   const customer_func = async () =>
-    await instanceOfAxios.get("customer").then((response) => {
-      setOptionCus(
-        response.data.data.items.map((row) => {
-          row.value = row.first_name + " " + row.last_name;
-          row.label = row.first_name + " " + row.last_name;
-          return row;
-        })
-      );
-    });
+    await instanceOfAxios
+      .get(`customer?per_page=` + 25 + "&page=" + cusPage)
+      .then((response) => {
+        setOptionCus(
+          response.data.data.items.map((row) => {
+            row.value = row.first_name + " " + row.last_name;
+            row.label = row.first_name + " " + row.last_name;
+            return row;
+          })
+        );
+      });
 
   const payment_mode = async () =>
     await instanceOfAxios.get("payment_mode").then((response) => {
@@ -112,31 +118,62 @@ const PaymentRegi = () => {
             "&sort_by=invoice_due_date&filter=unpaid"
         )
         .then((response) => {
-          setUserInvoice(response.data.data.items);
-
-          // setUserInvoice(
-          //   response.data.data.items.map((row) => {
-          //     return row;
-          //   })
-          // );
+          setUserInvoice(
+            response.data.data.items.map((row) => {
+              row.payment_amount = 0;
+              return row;
+            })
+          );
         });
     }
   };
 
-  // let totalAmount = 0;
- 
-  //  let id = 1;
-  //  (formik.values[`ammount_recieved_${id}`]).forEach((val) => {
-  //  totalAmount += parseFloat(formik.values[`amount_received_${val.id}`]) || 0;
-  //  console.log(totalAmount, "total ammount")
-  //  })
+  const handleChange = () => {
+    let totalPayment = 0;
+    userInvoice.forEach((val) => {
+      totalPayment += parseInt(val.payment_amount);
+    });
+    setPaymentValue(totalPayment);
+  };
+
+  // console.log(values, "values");
+  // const total = Object.values(values).reduce((acc, curr) => {
+  //   console.log(acc, "actual_value", curr, "current value");
+  //   let val = parseFloat(curr);
+  //   let va = parseFloat(acc);
+  //   va += val;
+  //   console.log(va, "arr value");
+  //   return va;
+  // }, 0);
+
+  // let total_value = 0;
+  // console.log(newVal, id)
+  // const { value } = newVal.target;
+  // setValues((prevValues) => ({
+  //   ...prevValues,
+  //   [id]: value,
+  // }));
+  // const new_total = Object.values(values).reduce((acc, curr) => {
+  //   console.log(acc, "actual_value", curr, "current value");
+  //   let val = parseFloat(curr);
+  //   let va = parseFloat(acc);
+  //   va += val;
+  //   console.log(va, "arr value");
+  //   return va;
+  // }, total_value);
+  // total_value = new_total;
+  // console.log(new_total, "total value");
+
+    const handleoptionChange = (selectedOption) => {
+      setSelectedOption(selectedOption);
+    };
+
 
   useEffect(() => {
     customer_func();
     payment_mode();
     fetchData();
-    // product_plan();
-  }, [customerID]);
+  }, [customerID, cusPage]);
 
   return (
     <div className=" pl-72 py-8 pr-10">
@@ -181,11 +218,23 @@ const PaymentRegi = () => {
                   type="text"
                   name="customer_name"
                   options={optionCus}
+                  onMenuScrollToTop={() => {
+                    cusPage > 1 &&
+                      setTimeout(() => {
+                        setcusPage(cusPage - 1);
+                      }, 300);
+                  }}
+                  onMenuScrollToBottom={() => {
+                    setTimeout(() => {
+                      setcusPage(cusPage + 1);
+                    }, 300);
+                  }}
                   value={{
                     value: formik.values.customer_name,
                     label: formik.values.customer_name,
                   }}
                   onChange={(newVal) => {
+                    handleoptionChange()
                     setCustomerID(newVal.id);
                     formik.setFieldValue("customer_name", newVal.value);
                     setDueAmt(newVal.total_due_amount);
@@ -338,16 +387,34 @@ const PaymentRegi = () => {
                             {}
                             <div className="flex flex-col">
                               <input
-                                type="number"
+                                type="varchar"
                                 value={
-                                  formik.values[`ammount_recieved_${val.id}`]
+                                  !formik.values[
+                                    `ammount_recieved_${val.id}`
+                                  ] ||
+                                  formik.values[
+                                    `ammount_recieved_${val.id}`
+                                  ].trim() === ""
+                                    ? parseInt("0")
+                                    : isNaN(
+                                        formik.values[
+                                          `ammount_recieved_${val.id}`
+                                        ]
+                                      )
+                                    ? parseInt("0")
+                                    : formik.values[
+                                        `ammount_recieved_${val.id}`
+                                      ]
                                 }
-                                onChange={(newVal) =>
-                                  formik.setFieldValue(
-                                    `ammount_recieved_${val.id}`,
-                                    newVal.target.value
-                                  )
-                                }
+                                onChange={(newVal) => {
+                                  handleChange(
+                                    (val.payment_amount = newVal.target.value),
+                                    formik.setFieldValue(
+                                      `ammount_recieved_${val.id}`,
+                                      newVal.target.value
+                                    )
+                                  );
+                                }}
                                 className="h-[34px] w-[200px] border border-slate-200 px-2 m-2"
                               />{" "}
                               <label className="px-3 text-blue-600">
@@ -382,11 +449,12 @@ const PaymentRegi = () => {
                           <p className="opacity-[0.7] mb-2">
                             ¥{formik.values.subscriber_name}
                           </p>
-                          {userInvoice.map((val) => (
-                            <p className="opacity-[0.7] mb-2">
-                              {formik.values[`ammount_recieved_${val.id}`]}
-                            </p>
-                          ))}
+
+                          <p className="opacity-[0.7] mb-2">
+                            ¥ {isNaN(paymentValue) ? 0 : paymentValue}
+                          </p>
+
+                          <p> ¥</p>
 
                           <p className="opacity-[0.7]"></p>
                         </div>

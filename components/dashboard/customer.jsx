@@ -254,9 +254,15 @@ function CusList() {
                           </label>
                         </div>
                       </td>
-                      <td scope="row" className=" py-4">
-                        {post.customer_number}
-                      </td>
+                      <Link href={`/cusDetails/details/${post.id}`}>
+                        <td
+                          scope="row"
+                          className=" py-4"
+                          onClick={() => console.log("workin")}
+                        >
+                          {post.customer_number}
+                        </td>
+                      </Link>
                       <td scope="row" className="px-6 py-4">
                         {post.first_name} {post.last_name}
                       </td>

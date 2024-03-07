@@ -338,7 +338,7 @@ function UserPay() {
                         {post.customer.first_name} {post.customer.last_name}
                       </td>
                       <td className="px-6 py-4">{post.mode}</td>
-                      <td className="px-6 py-4">¥{post.amount}</td>
+                      <td className="px-6 py-4">¥ {post.amount}</td>
 
                       <td className="px-6 py-4">
                         <p className="bg-green-200 px-2 py-1 rounded">

@@ -435,7 +435,7 @@ function Invoice() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-nowrap">
                   {user.map((post) => (
                     <tr
                       key={post.id}
