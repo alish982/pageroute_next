@@ -1,17 +1,31 @@
-"use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { instanceOfAxios } from "../../../others/localstorage";
 import Image from "next/image";
 
 function CustomerDetail({ id }) {
+  const [customerList, setCustomerList] = useState([]);
+  const [customerDetails, setCustomerDetails] = useState([]);
+
   const test_it = async () => {
+    console.log(id, "id");
     const response = await instanceOfAxios.get(`customer/${id}`);
-    console.log(response.data.data);
+    console.log(response.data.data.first_name, "name")
+    
   };
+console.log(customerDetails, "hello")
+  const cusData = async () => {
+    const response = await instanceOfAxios.get(
+      `customer?per_page=25&page=1&sort_by=created_at&sort_order=desc&search=&filter=all`
+    );
+
+    setCustomerList(response.data.data.items);
+  };
+
   useEffect(() => {
     if (id) {
       test_it();
     }
+    cusData();
   }, []);
 
   return (
@@ -39,32 +53,41 @@ function CustomerDetail({ id }) {
               </button>
             </div>
           </div>
-          <div className="flex items-center justify-between px-6 py-6">
-            <div className="flex ">
-              <input type="checkbox" className="mr-3 mb-6" />
-              <div className="flex flex-col">
-                <label className="font-semibold text-[13px]">
-                  Alish Acharya
-                </label>
-                <label>¥ 0</label>
+
+          {customerList.map((val) => (
+            <div
+              key={val.id}
+              className="flex items-center justify-between px-6 py-6"
+            >
+              <div className="flex ">
+                <input type="checkbox" className="mr-3 mb-6" />
+                <div className="flex flex-col">
+                  <label className="font-semibold text-[13px]">
+                    {val.first_name}
+                    {val.last_name}
+                  </label>
+                  <label>¥ 0</label>
+                </div>
               </div>
+              {val.is_active ? (
+                <div>
+                  <div className="bg-green-100 px-2.5 py-0.5 rounded">
+                    active
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="bg-red-100 px-2.5 py-0.5 rounded">
+                    inactive
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="bg-green-100 px-2.5 py-0.5 rounded">active</div>
-          </div>
-          <hr />
-          <div className="flex items-center justify-between px-6 py-6">
-            <div className="flex ">
-              <input type="checkbox" className="mr-3 mb-6" />
-              <div className="flex flex-col">
-                <label className="font-semibold text-[13px]">
-                  Alish Acharya
-                </label>
-                <label>¥ 0</label>
-              </div>
-            </div>
-            <div className="bg-green-100 px-2.5 py-0.5 rounded">active</div>
-          </div>
+          ))}
         </div>
+
+    
+
         <div className="w-2/3 h-screen ">
           <div className="flex items-center justify-between px-6 py-6 border-b ">
             <div>
@@ -180,27 +203,78 @@ function CustomerDetail({ id }) {
                   PERSONAL INFO
                 </label>
                 <div className="flex items-center justify-between">
-                  <div>image of email</div>
+                  <div>
+                    {" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="blue"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                      />
+                    </svg>
+                  </div>
                   <div>email</div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div>image of phone</div>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="blue"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
+                      />
+                    </svg>
+                  </div>
                   <div>contact</div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div>image of location</div>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="blue"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                      />
+                    </svg>
+                  </div>
                   <div>location</div>
                 </div>
               </div>
               <div className="p-4 border-b">
                 <label className="font-bold text-[#808080] tracking-widest">
-                 ADDITIONAL INFO
+                  ADDITIONAL INFO
                 </label>
                 <div></div>
               </div>
               <div className="p-4 border-b">
                 <label className="font-bold text-[#808080] tracking-widest">
-                 OTHERS DETAILS
+                  OTHERS DETAILS
                 </label>
               </div>
             </div>

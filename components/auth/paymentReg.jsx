@@ -17,12 +17,24 @@ const PaymentRegi = () => {
   const [paymentMode, setpaymentMode] = useState([]);
   const [dueChecked, setDueChecked] = useState(false);
   const [dueAmt, setDueAmt] = useState([]);
+  let [equalAmount, setEqualAmount] = useState();
+  let [remain, setRemain] = useState(0);
+  let [secValue, setSecVal] = useState(0);
+  let [secpaid, setsecPaid] = useState(0);
+  let [thirdVal, setthirdVal] = useState(0);
+  let [finalVal, setfinalVal] = useState(0);
+  let [excessVal, setexcessVal] = useState(0)
 
   const [dataEntered, setDataEntered] = useState(false);
   const [userInvoice, setUserInvoice] = useState([]);
   const [customerID, setCustomerID] = useState([]);
   const [paymentValue, setPaymentValue] = useState(0);
   let [cusPage, setcusPage] = useState(1);
+  let [calcAmount, setcalcAmount] = useState(0);
+  // let [calculatedAmount, setCalculatedAmount] = useState(0);
+  // let [excess, setExcess] = useState(0);
+  let [paidValue, setpaidValue] = useState(0);
+  let [smallerValue, setsmallerValue] = useState(0);
 
   const [showPopup, setShowPopup] = useState({
     status: false,
@@ -128,46 +140,74 @@ const PaymentRegi = () => {
     }
   };
 
+  useEffect(() => {
+    userInvoice.forEach((data, index) => {
+      if (index === 0) {
+        if (formik.values.subscriber_name > data.due_amount) {
+          let remainAmount = formik.values.subscriber_name - data.due_amount;
+          setcalcAmount(remainAmount);
+          setpaidValue(data.due_amount);
+        } else if (formik.values.subscriber_name === data.due_amount) {
+          let remainAmount = formik.values.subscriber_name;
+          console.log(remainAmount, "remain amount");
+        } else {
+          setsmallerValue(formik.values.subscriber_name);
+        }
+      }
+    });
+  }, [formik.values.subscriber_name, userInvoice, calcAmount]);
+
+  useEffect(() => {
+    userInvoice.forEach((data, index) => {
+      if (index === 1) {
+        if (calcAmount > data.due_amount) {
+          setSecVal(data.due_amount);
+          console.log(secValue, "val of sec");
+          let remain = calcAmount - data.due_amount;
+          console.log(remain, "remain of sec");
+          setthirdVal(remain);
+        } else if (calcAmount === data.due_amount) {
+          console.log("here it is boy")
+          setsecPaid(data.due_amount);
+        } else {
+          console.log("none");
+        }
+      }
+    });
+  });
+
+    useEffect(() => {
+      userInvoice.forEach((data, index) => {
+        if (index === 2) {
+          if (thirdVal > data.due_amount) {
+            setfinalVal(data.due_amount);
+            
+            let remain = thirdVal - data.due_amount;
+            console.log(remain, "remain of sec");
+            setexcessVal(remain);
+          
+          // } else if (calcAmount === data.due_amount) {
+          //   console.log("here it is boy");
+          //   setsecPaid(data.due_amount);
+           } else {
+            console.log("none");
+          }
+        }
+      });
+    });
+
   const handleChange = () => {
-    let totalPayment = 0;
     userInvoice.forEach((val) => {
-      totalPayment += parseInt(val.payment_amount);
+      val.payment_amount == ""
+        ? val.payment_amount === 0
+        : (totalPayment += parseInt(val.payment_amount));
     });
     setPaymentValue(totalPayment);
   };
 
-  // console.log(values, "values");
-  // const total = Object.values(values).reduce((acc, curr) => {
-  //   console.log(acc, "actual_value", curr, "current value");
-  //   let val = parseFloat(curr);
-  //   let va = parseFloat(acc);
-  //   va += val;
-  //   console.log(va, "arr value");
-  //   return va;
-  // }, 0);
-
-  // let total_value = 0;
-  // console.log(newVal, id)
-  // const { value } = newVal.target;
-  // setValues((prevValues) => ({
-  //   ...prevValues,
-  //   [id]: value,
-  // }));
-  // const new_total = Object.values(values).reduce((acc, curr) => {
-  //   console.log(acc, "actual_value", curr, "current value");
-  //   let val = parseFloat(curr);
-  //   let va = parseFloat(acc);
-  //   va += val;
-  //   console.log(va, "arr value");
-  //   return va;
-  // }, total_value);
-  // total_value = new_total;
-  // console.log(new_total, "total value");
-
-    const handleoptionChange = (selectedOption) => {
-      setSelectedOption(selectedOption);
-    };
-
+  const handleoptionChange = (selectedOption) => {
+    setSelectedOption(selectedOption);
+  };
 
   useEffect(() => {
     customer_func();
@@ -234,7 +274,7 @@ const PaymentRegi = () => {
                     label: formik.values.customer_name,
                   }}
                   onChange={(newVal) => {
-                    handleoptionChange()
+                    handleoptionChange();
                     setCustomerID(newVal.id);
                     formik.setFieldValue("customer_name", newVal.value);
                     setDueAmt(newVal.total_due_amount);
@@ -245,6 +285,7 @@ const PaymentRegi = () => {
                 />
               </div>
             </div>
+
             <div className="flex mt-5">
               <div className="w-full md:w-1/2 md:mb-0">
                 <label className="  " htmlFor="grid-first-name">
@@ -252,7 +293,7 @@ const PaymentRegi = () => {
                 </label>
                 <input
                   className="w-[485px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
-                  type="text"
+                  type="number"
                   placeholder=""
                   name="subscriber_name"
                   value={dueChecked ? dueAmt : formik.values.subscriber_name}
@@ -367,7 +408,7 @@ const PaymentRegi = () => {
                         <th className="pl-[20px] text-left ">Payment</th>
                       </tr>
                     </thead>
-                    {userInvoice.map((val) => (
+                    {userInvoice.map((val, index) => (
                       <tbody className="">
                         <tr key={val.id}>
                           <td className="px-6 py-4 border-b border-slate-200">
@@ -385,26 +426,33 @@ const PaymentRegi = () => {
                           </td>
                           <td className="px-6 py-4  border-b border-slate-200">
                             {}
+                            {console.log(
+                              calcAmount,
+                              "calcAmount",
+                              paidValue,
+                              "paidValue",
+                              smallerValue,
+                              "smallerValue"
+                            )}
                             <div className="flex flex-col">
                               <input
                                 type="varchar"
                                 value={
-                                  !formik.values[
-                                    `ammount_recieved_${val.id}`
-                                  ] ||
-                                  formik.values[
-                                    `ammount_recieved_${val.id}`
-                                  ].trim() === ""
-                                    ? parseInt("0")
-                                    : isNaN(
-                                        formik.values[
-                                          `ammount_recieved_${val.id}`
-                                        ]
-                                      )
-                                    ? parseInt("0")
-                                    : formik.values[
-                                        `ammount_recieved_${val.id}`
-                                      ]
+                                  formik.values.subscriber_name
+                                    ? index === 0
+                                      ? calcAmount === 0
+                                        ? smallerValue
+                                        : paidValue
+                                      : index === 1
+                                      ? thirdVal !== 0
+                                        ? secValue
+                                        : calcAmount
+                                      : index === 2
+                                      ? excessVal > 0
+                                        ? finalVal
+                                        : thirdVal
+                                      : ""
+                                    : ""
                                 }
                                 onChange={(newVal) => {
                                   handleChange(
@@ -454,7 +502,7 @@ const PaymentRegi = () => {
                             ¥ {isNaN(paymentValue) ? 0 : paymentValue}
                           </p>
 
-                          <p> ¥</p>
+                          <p> ¥{excessVal ? excessVal : ""}</p>
 
                           <p className="opacity-[0.7]"></p>
                         </div>
