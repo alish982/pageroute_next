@@ -14,6 +14,11 @@ function CusList() {
   let [search, setSearch] = useState("");
   let [filter, setFilter] = useState("all");
   let [show, setShow] = useState(false);
+  let [permission, setPermissionCustomer] = useState(true);
+  let [customerRole, setCustomerRole] = useState([]);
+  let [userid, setUserId] = useState([]);
+  let [showOption, setShowOption] = useState(false);
+  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
 
   const test_it = async () => {
     await instanceOfAxios
@@ -34,12 +39,8 @@ function CusList() {
       .then((response) => {
         setUser(response.data.data.items);
         setPage(response.data.data.page);
-        
       });
   };
-  useEffect(() => {
-    test_it();
-  }, [page, filter, sort]);
 
   function handleSearch(e) {
     if (e.keyCode === 13) {
@@ -56,6 +57,68 @@ function CusList() {
     console.log("working");
     sort === "asc" ? setSort("desc") : setSort("asc");
   }
+
+  const perData = async () =>
+    await instanceOfAxios
+      .get("permissions?module_value=customer")
+      .then((response) => {
+        const roleId = response.data.data.customer.map((val) => ({
+          code: val.code,
+          name: val.name,
+        }));
+      });
+
+  // const handleClick = (e) => {
+  //   if (!e) return;
+  //   const { clientX, clientY } = e;
+  //   if (clientX === coordinates.x && clientY === coordinates.y) {
+  //     setShowOption(!showOption);
+  //   } else {
+  //     setShowOption(true);
+  //     setCoordinates({ x: clientX, y: clientY });
+  //   }
+  // };
+
+  const handleClick = (e) => {
+    if (!e) return;
+    const { clientX, clientY } = e;
+    if (
+      clientX >= coordinates.x &&
+      clientX <= coordinates.x + 100 &&
+      clientY >= coordinates.y &&
+      clientY <= coordinates.y + 80
+    ) {
+      setShowOption(!showOption);
+    } else {
+      setShowOption(true);
+      setCoordinates({ x: clientX, y: clientY });
+    }
+  };
+
+  const handleClickOutside = (e) => {
+    const { clientX, clientY } = e;
+    if (
+      clientX < coordinates.x ||
+      clientX > coordinates.x + 100 ||
+      clientY < coordinates.y ||
+      clientY > coordinates.y + 80
+    ) {
+      setShowOption(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [coordinates.x, coordinates.y]);
+
+  useEffect(() => {
+    test_it();
+    perData();
+  }, [page, filter, sort]);
 
   return (
     <div className="">
@@ -133,11 +196,17 @@ function CusList() {
                   ) : null}
                 </div>
               </div>
-              <Link href="/auth/cus_register">
-                <button className=" bg-[#309fed] hover:bg-[#1776BD] text-white font-bold py-2 px-4 w-[150px] h-[40px] rounded null">
-                  + Add New
-                </button>
-              </Link>
+              <div>
+                {permission ? (
+                  <Link href="/auth/cus_register">
+                    <button className=" bg-[#309fed] hover:bg-[#1776BD] text-white font-bold py-2 px-4 w-[150px] h-[40px] rounded null">
+                      + Add New
+                    </button>
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
 
@@ -228,9 +297,7 @@ function CusList() {
                     >
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-4 text-gray-800">
-                      Update
-                    </th>
+                    <th scope="col" className="px-6 py-4 text-gray-800"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -255,11 +322,7 @@ function CusList() {
                         </div>
                       </td>
                       <Link href={`/cusDetails/details/${post.id}`}>
-                        <td
-                          scope="row"
-                          className=" py-4"
-                          onClick={() => console.log("workin")}
-                        >
+                        <td scope="row" className=" py-4 hover:text-[#309fed]">
                           {post.customer_number}
                         </td>
                       </Link>
@@ -283,12 +346,46 @@ function CusList() {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <Link
-                          className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end "
-                          href={`/user/update/${post.id}`}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6 text-[#A3A5A7] hover:text-black "
+                          onClick={handleClick}
                         >
-                          Update
-                        </Link>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                          />
+                        </svg>
+                        {showOption ? (
+                          <div
+                            onClick={() => setShowOption(!showOption)}
+                            className="bg-white rounded flex flex-col absolute bottom-10 right-7 box-border border-none w-[100px] h-88 border-2 py-2 pl-2 mr-0 rounded text-black shadow"
+                            style={{
+                              top: coordinates.y,
+                              right: window.innerWidth - coordinates.x,
+                              display: "inline-block",
+                              width: "100px",
+                              height: "80px",
+                            }}
+                          >
+                            <ul className="pl-2 ">
+                              <li className="my-1">show</li>
+                              <li className="my-1">
+                                <Link href={`/user/update/${post.id}`}>
+                                  update
+                                </Link>
+                              </li>
+                              <li className="my-1">delete</li>
+                            </ul>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
                       </td>
                     </tr>
                   ))}

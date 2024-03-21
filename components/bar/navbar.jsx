@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import Image from 'next/image'
+import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
@@ -40,16 +40,22 @@ const Header = () => {
           </svg>
         </div>
         <div className=" text-slate-700 hover:pt-2 ">
-         <Image src = "/profileimage.svg" alt ="" height = "30" width = "30" loading="lazy" />
+          <Image
+            src="/profileimage.svg"
+            alt=""
+            height="30"
+            width="30"
+            loading="lazy"
+          />
         </div>
-        <div className=" text-slate-700 hover:pt-2">
+        <div className=" text-slate-700 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className="w-9 h-9"
+            className="w-9 h-9 hover:stroke-blue-500 transaction-colors duration-200"
           >
             <path
               strokeLinecap="round"

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import Success from "../components/others/popup";
 import Cookies from "js-cookie";
+import UserPermission from "./userPermission";
 
 const MainHomepage = () => {
   const [message, setMessage] = useState("");
@@ -40,6 +41,7 @@ const MainHomepage = () => {
       );
       let response = await data.json();
       localStorage.setItem("token_ho_yo", response.access_token);
+      localStorage.setItem("user_id", response.user.id);
 
       if (data.status === 200) {
         Cookies.set("auth", true);
@@ -205,13 +207,14 @@ const MainHomepage = () => {
             </button>
           </div>
           <div className="fixed bottom-4">
-            <p className="text-[#808080] text-[12px] text-[#A3A5A7] tracking-wider">
+            <p className="flex justify-center text-[#808080] text-[12px] text-[#A3A5A7] tracking-wider">
               Copyright@ NITV CRM. All rights reserved
             </p>
           </div>
           {showPopup.status && (
             <Success showPopup={showPopup} setShowPopup={setShowPopup} />
           )}
+          {/* <UserPermission /> */}
         </div>
       </div>
     </form>

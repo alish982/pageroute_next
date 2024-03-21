@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 function Success({ showPopup, setShowPopup }) {
-  console.log(setShowPopup);
+ 
   const handleClick = () => {
     setShowPopup({ status: false });
   };

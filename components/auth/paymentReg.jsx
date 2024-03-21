@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { instanceOfAxios } from "../others/localstorage";
+import Success from "../others/popup";
 
 //import Select from 'react-select'
 
@@ -17,22 +18,17 @@ const PaymentRegi = () => {
   const [paymentMode, setpaymentMode] = useState([]);
   const [dueChecked, setDueChecked] = useState(false);
   const [dueAmt, setDueAmt] = useState([]);
-  let [equalAmount, setEqualAmount] = useState();
-  let [remain, setRemain] = useState(0);
-  let [secValue, setSecVal] = useState(0);
-  let [secpaid, setsecPaid] = useState(0);
-  let [thirdVal, setthirdVal] = useState(0);
-  let [finalVal, setfinalVal] = useState(0);
-  let [excessVal, setexcessVal] = useState(0)
-
   const [dataEntered, setDataEntered] = useState(false);
   const [userInvoice, setUserInvoice] = useState([]);
   const [customerID, setCustomerID] = useState([]);
   const [paymentValue, setPaymentValue] = useState(0);
+  let [secValue, setSecVal] = useState(0);
+  let [secpaid, setsecPaid] = useState(0);
+  let [thirdVal, setthirdVal] = useState(0);
+  let [finalVal, setfinalVal] = useState(0);
+  let [excessVal, setexcessVal] = useState(0);
   let [cusPage, setcusPage] = useState(1);
   let [calcAmount, setcalcAmount] = useState(0);
-  // let [calculatedAmount, setCalculatedAmount] = useState(0);
-  // let [excess, setExcess] = useState(0);
   let [paidValue, setpaidValue] = useState(0);
   let [smallerValue, setsmallerValue] = useState(0);
 
@@ -44,16 +40,22 @@ const PaymentRegi = () => {
   });
 
   const [initialValue, setValue] = useState({
-    ammount_recieved: "",
-    subscriber_name: "",
+    // amount_received: "",
+    amount: "",
     subscriber_relation: "",
-    customer_name: "",
+    customer_id: "",
     product_planname: "",
-    product_name: "",
+    mode: "",
     product_plan: "",
     product_price: "",
     product_ammount: "",
     plan_type: "",
+    paid_at: "",
+    reference: "",
+    send_mail: "1",
+    apply_to_invoice: "",
+    send_main: "",
+    payAmount: ""
   });
 
   const router = useRouter();
@@ -62,38 +64,23 @@ const PaymentRegi = () => {
     initialValues: initialValue,
 
     onSubmit: async (values) => {
-      let formData = new FormData();
-
-      for (const [key, value] of Object.entries(values)) {
-        formData.append(key, value);
-      }
-      let data = await instanceOfAxios
-        .post(
-          "https://nitvcrmapi.truestreamz.com/api/v1/customer/register",
-          formData
-        )
-        .then((data) => {
-          setShowPopup(data.status);
-
-          data.status === 200
-            ? setShowPopup({
-                status: true,
-                message: "Success, Thankyou",
-                messageDetails: "user created sucessfully",
-                statusCode: 200,
-              })
-            : setShowPopup({
-                status: true,
-                message: "Failed, Sorry",
-                messageDetails: "couldn't create user",
-                statusCode: 400,
-              });
-          if (data.status === 200) {
-            router.push("/dash/customer");
-          } else {
-            router.push("/auth/cus_register");
-          }
-        });
+      let data = await instanceOfAxios.post("payment", values).then((data) => {
+        console.log(data.status, "status of response");
+        data.status === 201
+          ? setShowPopup({
+              status: true,
+              message: "Success, Thankyou",
+              messageDetails: "user created sucessfully",
+              statusCode: 200,
+            })
+          : setShowPopup({
+              status: true,
+              message: "Failed, Sorry",
+              messageDetails: "couldn't create user",
+              statusCode: 400,
+            });
+        router.push("/dash/payment");
+      });
     },
   });
 
@@ -140,69 +127,108 @@ const PaymentRegi = () => {
     }
   };
 
+  // useEffect(() => {
+  //   userInvoice.forEach((data, index) => {
+  //     if (index === 0) {
+  //       if (formik.values.amount_received > data.due_amount) {
+  //         let remainAmount = formik.values.amount_received - data.due_amount;
+  //         setcalcAmount(remainAmount);
+  //         setpaidValue(data.due_amount);
+  //       } else if (formik.values.amount_received === data.due_amount) {
+  //         let remainAmount = formik.values.amount_received;
+  //         console.log(remainAmount, "remain amount");
+  //       } else {
+  //         setsmallerValue(formik.values.amount_received);
+  //       }
+  //     }
+  //   });
+  // }, [formik.values.amount_received, userInvoice, calcAmount]);
+
+  // useEffect(() => {
+  //   userInvoice.forEach((data, index) => {
+  //     if (index === 1) {
+  //       if (calcAmount > data.due_amount) {
+  //         setSecVal(data.due_amount);
+  //         console.log(secValue, "val of sec");
+  //         let remain = calcAmount - data.due_amount;
+  //         console.log(remain, "remain of sec");
+  //         setthirdVal(remain);
+  //       } else if (calcAmount === data.due_amount) {
+  //         console.log("here it is boy");
+  //       } else {
+  //         console.log("none");
+  //       }
+  //     }
+  //   });
+  // });
+
+  // useEffect(() => {
+  //   userInvoice.forEach((data, index) => {
+  //     if (index === 2) {
+  //       if (thirdVal > data.due_amount) {
+  //         setfinalVal(data.due_amount);
+
+  //         let remain = thirdVal - data.due_amount;
+  //         console.log(remain, "remain of sec");
+  //         setexcessVal(remain);
+  //       } else {
+  //         console.log("none");
+  //       }
+  //     }
+  //   });
+  // }, [thirdVal]);
+
   useEffect(() => {
     userInvoice.forEach((data, index) => {
       if (index === 0) {
-        if (formik.values.subscriber_name > data.due_amount) {
-          let remainAmount = formik.values.subscriber_name - data.due_amount;
+        if (formik.values.amount_received > data.due_amount) {
+          let remainAmount = formik.values.amount_received - data.due_amount;
           setcalcAmount(remainAmount);
           setpaidValue(data.due_amount);
-        } else if (formik.values.subscriber_name === data.due_amount) {
-          let remainAmount = formik.values.subscriber_name;
-          console.log(remainAmount, "remain amount");
+        } else if (formik.values.amount_received === data.due_amount) {
+          setcalcAmount(formik.values.amount_received);
+          setpaidValue(formik.values.amount_received);
         } else {
-          setsmallerValue(formik.values.subscriber_name);
+          setsmallerValue(formik.values.amount_received);
         }
       }
     });
-  }, [formik.values.subscriber_name, userInvoice, calcAmount]);
+  }, [formik.values.amount_received, userInvoice]);
 
   useEffect(() => {
     userInvoice.forEach((data, index) => {
       if (index === 1) {
         if (calcAmount > data.due_amount) {
           setSecVal(data.due_amount);
-          console.log(secValue, "val of sec");
           let remain = calcAmount - data.due_amount;
-          console.log(remain, "remain of sec");
           setthirdVal(remain);
         } else if (calcAmount === data.due_amount) {
-          console.log("here it is boy")
           setsecPaid(data.due_amount);
-        } else {
-          console.log("none");
         }
       }
     });
-  });
+  }, [calcAmount, userInvoice, secValue, thirdVal, secpaid]);
 
-    useEffect(() => {
-      userInvoice.forEach((data, index) => {
-        if (index === 2) {
-          if (thirdVal > data.due_amount) {
-            setfinalVal(data.due_amount);
-            
-            let remain = thirdVal - data.due_amount;
-            console.log(remain, "remain of sec");
-            setexcessVal(remain);
-          
-          // } else if (calcAmount === data.due_amount) {
-          //   console.log("here it is boy");
-          //   setsecPaid(data.due_amount);
-           } else {
-            console.log("none");
-          }
+  useEffect(() => {
+    userInvoice.forEach((data, index) => {
+      if (index === 2) {
+        if (thirdVal > data.due_amount) {
+          setfinalVal(data.due_amount);
+          let remain = thirdVal - data.due_amount;
+          setexcessVal(remain);
         }
-      });
+      }
     });
+  }, [thirdVal, userInvoice, excessVal]);
 
   const handleChange = () => {
     userInvoice.forEach((val) => {
+      let totalPayment = 0;
       val.payment_amount == ""
         ? val.payment_amount === 0
         : (totalPayment += parseInt(val.payment_amount));
+      setPaymentValue(totalPayment);
     });
-    setPaymentValue(totalPayment);
   };
 
   const handleoptionChange = (selectedOption) => {
@@ -256,7 +282,7 @@ const PaymentRegi = () => {
                 <Select
                   className="appearance-none block w-full text-gray-700 rounded focus:outline-none focus:bg-white focus:border-blue-500"
                   type="text"
-                  name="customer_name"
+                  name="customer_id"
                   options={optionCus}
                   onMenuScrollToTop={() => {
                     cusPage > 1 &&
@@ -276,7 +302,8 @@ const PaymentRegi = () => {
                   onChange={(newVal) => {
                     handleoptionChange();
                     setCustomerID(newVal.id);
-                    formik.setFieldValue("customer_name", newVal.value);
+                    formik.setFieldValue("customer_name", newVal.label);
+                    formik.setFieldValue("customer_id", newVal.id);
                     setDueAmt(newVal.total_due_amount);
                     setDataEntered(true);
                     fetchData();
@@ -295,13 +322,10 @@ const PaymentRegi = () => {
                   className="w-[485px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
                   type="number"
                   placeholder=""
-                  name="subscriber_name"
-                  value={dueChecked ? dueAmt : formik.values.subscriber_name}
+                  name="amount"
+                  value={dueChecked ? dueAmt : formik.values.amount}
                   onChange={(newVal) => {
-                    formik.setFieldValue(
-                      "subscriber_name",
-                      newVal.target.value
-                    );
+                    formik.setFieldValue("amount", newVal.target.value);
                     setDueChecked(false);
                   }}
                   onBlur={formik.handleBlur}
@@ -311,7 +335,10 @@ const PaymentRegi = () => {
                     type="checkbox"
                     value="1"
                     className="mr-2"
-                    onClick={() => setDueChecked(!dueChecked)}
+                    onClick={() => {
+                      setDueChecked(!dueChecked);
+                      formik.setFieldValue("payAmount", dueAmt);
+                    }}
                   />
                   <label className="">Received full amount (¥ {dueAmt})</label>
                 </div>
@@ -325,13 +352,12 @@ const PaymentRegi = () => {
                   id="grid-first-name"
                   type="varchar"
                   placeholder=""
-                  name="start_data"
+                  name="paid_at"
                   onChange={(date) => {
-                    formik.setFieldValue("start_date", date);
+                    formik.setFieldValue("paid_at", date);
                     setDate(date);
                   }}
                   selected={date}
-                  //onChange={(date) => setDate(date)}
                 />
               </div>
             </div>
@@ -345,13 +371,13 @@ const PaymentRegi = () => {
                     className=" w-[484px] text-gray-700 rounded mb-10 mt-2 focus:outline-none focus:bg-white"
                     type="text"
                     options={paymentMode}
-                    name="product_name"
+                    name="mode"
                     value={{
-                      label: formik.values.product_name,
-                      value: formik.values.product_name,
+                      label: formik.values.mode,
+                      value: formik.values.mode,
                     }}
                     onChange={(newValue) => {
-                      formik.setFieldValue("product_name", newValue.label);
+                      formik.setFieldValue("mode", newValue.label);
                     }}
                     onBlur={formik.handleBlur}
                   />
@@ -365,10 +391,10 @@ const PaymentRegi = () => {
                     className="w-[485px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-7 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
                     type="text"
                     placeholder=""
-                    name="subscriber_name"
-                    value=""
+                    name="reference"
+                    value={formik.values.reference}
                     onChange={(newVal) => {
-                      formik.setFieldValue("subscriber_name", newVal.value);
+                      formik.setFieldValue("reference", newVal.value);
                     }}
                     onBlur={formik.handleBlur}
                   />
@@ -380,8 +406,12 @@ const PaymentRegi = () => {
               <br></br>
               <textarea
                 placeholder="here"
-                value="here"
+                value={formik.values.description}
                 className="border border-slate-300 p-4 rounded text-gray-800"
+                name="description"
+                onChange={(val) => {
+                  formik.setFieldValue("description", val.value);
+                }}
               />
             </div>
             <div className="mb-10 mt-5">
@@ -390,8 +420,22 @@ const PaymentRegi = () => {
               </label>
               <br />
               <div className="mt-3 mb-8 flex">
-                <input type="radio" name="date" /> &nbsp;yes &nbsp; &nbsp;
-                <input type="radio" name="date" /> &nbsp;No <br></br>
+                <input
+                  type="radio"
+                  name="apply_to_invoice"
+                  onClick={() => {
+                    formik.setFieldValue("apply_to_invoice", "0");
+                  }}
+                />{" "}
+                &nbsp;yes &nbsp; &nbsp;
+                <input
+                  type="radio"
+                  name="apply_to_invoice"
+                  onClick={() => {
+                    formik.setFieldValue("apply_to_invoice", "1");
+                  }}
+                />{" "}
+                &nbsp;No <br></br>
               </div>
 
               {dataEntered ? (
@@ -426,19 +470,30 @@ const PaymentRegi = () => {
                           </td>
                           <td className="px-6 py-4  border-b border-slate-200">
                             {}
-                            {console.log(
-                              calcAmount,
-                              "calcAmount",
-                              paidValue,
-                              "paidValue",
-                              smallerValue,
-                              "smallerValue"
-                            )}
+
                             <div className="flex flex-col">
                               <input
                                 type="varchar"
+                                name="amount_received_pay"
+                                // value={
+                                //   formik.values.amount_received
+                                //     ? index === 0
+                                //       ? calcAmount === 0
+                                //         ? smallerValue
+                                //         : paidValue
+                                //       : index === 1
+                                //       ? thirdVal !== 0
+                                //         ? secValue
+                                //         : calcAmount
+                                //       : index === 2
+                                //       ? excessVal > 0
+                                //         ? finalVal
+                                //         : thirdVal
+                                //       : ""
+                                //     : ""
+                                // }
                                 value={
-                                  formik.values.subscriber_name
+                                  formik.values.payAmount
                                     ? index === 0
                                       ? calcAmount === 0
                                         ? smallerValue
@@ -454,12 +509,13 @@ const PaymentRegi = () => {
                                       : ""
                                     : ""
                                 }
-                                onChange={(newVal) => {
+                                onChange={(e) => {
                                   handleChange(
-                                    (val.payment_amount = newVal.target.value),
+                                    (val.payment_amount = e.target.value),
                                     formik.setFieldValue(
-                                      `ammount_recieved_${val.id}`,
-                                      newVal.target.value
+                                      // `amount_received_${val.id}`,
+                                      `amount_received_pay`,
+                                      e.target.value
                                     )
                                   );
                                 }}
@@ -482,7 +538,7 @@ const PaymentRegi = () => {
                           {" "}
                           Sub Total :
                         </p>
-                        <p className="opacity-[0.7] mb-2">Amount recived:</p>
+                        <p className="opacity-[0.7] mb-2 ">Amount recived:</p>
                         <p className="opacity-[0.7] mb-2">
                           Amount Used for Payment:
                         </p>
@@ -495,7 +551,7 @@ const PaymentRegi = () => {
                             ¥ {dueAmt}
                           </p>
                           <p className="opacity-[0.7] mb-2">
-                            ¥{formik.values.subscriber_name}
+                            ¥{formik.values.amount_received}
                           </p>
 
                           <p className="opacity-[0.7] mb-2">
@@ -514,23 +570,28 @@ const PaymentRegi = () => {
                 <div></div>
               )}
               <div className="flex mt-3">
-                <input type="checkbox" value="email" id="email" />
+                <input
+                  type="checkbox"
+                  value="email"
+                  id="email"
+                  name="send_main"
+                />
                 &nbsp;
                 <label className="">
                   Email a "thank you" note for this payment
                 </label>
               </div>
             </div>
-
+            {showPopup.status && (
+              <Success showPopup={showPopup} setShowPopup={setShowPopup} />
+            )}
             <div className="py-5 flex items-center justify-between">
-              <Link href="/dash/payment">
-                <button
-                  className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Save
-                </button>
-              </Link>
+              <button
+                className="w-32 h-12 bg-blue-500 hover:bg-slate-900 text-white text-lg font-bold py-2 px-4 -mt-5 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Save
+              </button>
             </div>
           </div>
         </form>

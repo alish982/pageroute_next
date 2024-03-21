@@ -1,18 +1,23 @@
 import { useState, useEffect, use } from "react";
 import { instanceOfAxios } from "../../../others/localstorage";
-import Image from "next/image";
+import Invoice from "../Invoice";
+import Overview from "../overview";
+import Payments from "../payment.jsx";
+import Unused_Payments from "../unused_payment";
+import Comment from "../comment";
 
 function CustomerDetail({ id }) {
   const [customerList, setCustomerList] = useState([]);
   const [customerDetails, setCustomerDetails] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  let [tab, changeTab] = useState("overview");
 
   const test_it = async () => {
-    console.log(id, "id");
     const response = await instanceOfAxios.get(`customer/${id}`);
-    console.log(response.data.data.first_name, "name")
-    
+    setCustomerDetails(response.data.data);
+    setLoading(false);
   };
-console.log(customerDetails, "hello")
+
   const cusData = async () => {
     const response = await instanceOfAxios.get(
       `customer?per_page=25&page=1&sort_by=created_at&sort_order=desc&search=&filter=all`
@@ -21,19 +26,26 @@ console.log(customerDetails, "hello")
     setCustomerList(response.data.data.items);
   };
 
+  const setTab = (tab_name) => {
+    changeTab(tab_name);
+  };
+
   useEffect(() => {
     if (id) {
       test_it();
     }
     cusData();
-  }, []);
+  }, [id]);
 
   return (
     <div className="pl-60 py-[50px]">
       <div className="flex">
-        <div className="w-1/3 h-screen border-r">
-          <div className="w-full border-r border-b border-[#ECECEC]">
-            <div className="flex justify-between py-6 px-6 gap-4 sticky top-0 bg-white z-50">
+        <div
+          className=" h-screen border-r overflow-y-auto"
+          style={{ width: `calc(33.333% - 2.5rem)` }}
+        >
+          <div className="sticky top-0 bg-white border-r border-b border-[#ECECEC]">
+            <div className=" flex justify-between py-6 px-6 gap-4 ">
               <label className="text-xl font-semibold">Customer</label>
               <button className="">
                 <svg
@@ -57,9 +69,9 @@ console.log(customerDetails, "hello")
           {customerList.map((val) => (
             <div
               key={val.id}
-              className="flex items-center justify-between px-6 py-6"
+              className="flex items-center justify-between px-6 py-6 "
             >
-              <div className="flex ">
+              <div className="flex  ">
                 <input type="checkbox" className="mr-3 mb-6" />
                 <div className="flex flex-col">
                   <label className="font-semibold text-[13px]">
@@ -86,10 +98,8 @@ console.log(customerDetails, "hello")
           ))}
         </div>
 
-    
-
-        <div className="w-2/3 h-screen ">
-          <div className="flex items-center justify-between px-6 py-6 border-b ">
+        <div className=" relative w-2/3 h-screen overflow-y-auto ">
+          <div className="sticky top-0 bg-white flex items-center justify-between px-6 py-6 border-b ">
             <div>
               <button className="border border-slate-200 rounded p-2">
                 <svg
@@ -107,9 +117,16 @@ console.log(customerDetails, "hello")
                   />
                 </svg>
               </button>
-              <label className=" px-4 font-bold text-[18px] capitalize">
-                Alish
-              </label>
+
+              {isLoading ? (
+                <div className="ml-4 inline-block h-9 w-9 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] "></div>
+              ) : (
+                customerDetails && (
+                  <label className="px-4 font-bold text-[18px] capitalize">
+                    {customerDetails.first_name}
+                  </label>
+                )
+              )}
             </div>
             <div>
               <button className="border border-slate-200 px-4 py-1.5 mx-2 rounded">
@@ -130,6 +147,7 @@ console.log(customerDetails, "hello")
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
+                    f
                     fill="currentColor"
                     className="w-5 h-5"
                   >
@@ -150,206 +168,87 @@ console.log(customerDetails, "hello")
               </button>
             </div>
           </div>
-          <div className="border-b border-[#ECECEC] flex gap-x-8 px-8">
-            <div className="py-4 w-20 hover:text-[#309FED] false">
-              <h6 className="font-bold text-center">OVERVIEW</h6>
+          <div className="sticky top-0 bg-white border-b border-[#ECECEC] flex gap-x-8 px-8">
+            <div
+              className={` py-4 w-22 hover:text-[#309FED] ${
+                tab === "overview"
+                  ? "text-[#309FED] border-b-2 border-[#309FED]"
+                  : ""
+              }`}
+            >
+              <h6
+                className="font-bold text-center"
+                onClick={() => setTab("overview")}
+              >
+                OVERVIEW
+              </h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={` py-4 w-20 hover:text-[#309FED] ${
+                tab === "invoice"
+                  ? " text-[#309FED] border-b-2 border-[#309FED]"
+                  : ""
+              }`}
+            >
               {" "}
-              <h6 className="font-bold text-center">INVOICE</h6>
+              <h6
+                className="font-bold text-center"
+                onClick={() => setTab("invoice")}
+              >
+                INVOICE
+              </h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={` py-4 w-22 hover:text-[#309FED] ${
+                tab === "payment"
+                  ? "text-[#309FED] border-b-2 border-[#309FED]"
+                  : ""
+              }`}
+            >
               {" "}
-              <h6 className="font-bold text-center">PAYMENTS</h6>
+              <h6
+                className="font-bold text-center"
+                onClick={() => setTab("payment")}
+              >
+                PAYMENTS
+              </h6>
             </div>
-            <div className="py-4 pl-1 w-21 hover:text-[#309FED] false">
+            <div
+              className={` py-4 w-22 hover:text-[#309FED] ${
+                tab === "unused_payment"
+                  ? "text-[#309FED] border-b-2 border-[#309FED]"
+                  : ""
+              }`}
+            >
               {" "}
-              <h6 className="font-bold text-center ">UNUSED PAYMENTS</h6>
+              <h6
+                className="font-bold text-center "
+                onClick={() => setTab("unused_payment")}
+              >
+                UNUSED PAYMENTS
+              </h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={` py-4 w-22 hover:text-[#309FED] ${
+                tab === "comment"
+                  ? "text-[#309FED] border-b-2 border-[#309FED]"
+                  : ""
+              }`}
+            >
               {" "}
-              <h6 className="font-bold text-center">COMMENTS</h6>
+              <h6
+                className="font-bold text-center"
+                onClick={() => setTab("comment")}
+              >
+                COMMENTS
+              </h6>
             </div>
           </div>
-          <div className="flex">
-            <div className="w-1/3 h-screen border-r">
-              <div className="grid place-items-center py-5 border-b">
-                <div>
-                  <Image
-                    src="/default_profile.svg"
-                    alt=""
-                    height="80"
-                    width="80"
-                  />
-                </div>
-                <label className="text-[16px] font-semibold py-3">Alish</label>
-                <lable className=" text-green-400 bg-green-50 px-2 rounded">
-                  active
-                </lable>
-              </div>
-              <div className="flex gap-6 py-3 pl-24 pr-20 border-b">
-                <div>
-                  <Image src="/whatsapp.svg" alt="" height="25" width="25" />
-                </div>
-                <div>
-                  <Image src="/fb.svg" alt="" height="25" width="25" />
-                </div>
-                <div>
-                  <Image src="/line.svg" alt="" height="25" width="25" />
-                </div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  PERSONAL INFO
-                </label>
-                <div className="flex items-center justify-between">
-                  <div>
-                    {" "}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="blue"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                      />
-                    </svg>
-                  </div>
-                  <div>email</div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="blue"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
-                      />
-                    </svg>
-                  </div>
-                  <div>contact</div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="blue"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <div>location</div>
-                </div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  ADDITIONAL INFO
-                </label>
-                <div></div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  OTHERS DETAILS
-                </label>
-              </div>
-            </div>
-            <div className="w-2/3 h-screen ">
-              <div className="flex flex-col">
-                <div className=" gap-5 py-4 px-4 flex ">
-                  <div className="border rounded w-[150px]">
-                    <div>
-                      <div className="flex py-6 px-4">
-                        <div>
-                          <Image
-                            src="/receivable.svg"
-                            alt=""
-                            height="30"
-                            width="30"
-                          />
-                        </div>
-                        <div className="flex flex-col mx-3">
-                          <label>receivables</label>
-                          <p className="space-x-1 font-bold text-[20px]">¥ 0</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border rounded w-[150px]">
-                    <div>
-                      <div className="flex py-6 px-4">
-                        <div>
-                          <Image
-                            src="/excess_credit.svg"
-                            alt=""
-                            height="30"
-                            width="30"
-                          />
-                        </div>
-                        <div className="flex flex-col mx-3">
-                          <label>excess credits</label>
-                          <p className="space-x-1 font-bold text-[20px]">¥ 0</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border rounded w-[150px]">
-                    <div>
-                      <div className="flex py-6 px-4">
-                        <div>
-                          <Image
-                            src="/deposit.svg"
-                            alt=""
-                            height="30"
-                            width="30"
-                          />
-                        </div>
-                        <div className="flex flex-col mx-3">
-                          <label>deposit</label>
-                          <p className="space-x-1 font-bold text-[20px]">¥ 0</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <label className="font-bold text-[16px] border-b p-4">
-                  Card Info
-                </label>
-              </div>
-              <div className="bg-slate-200 w-[250px] h-[75px] grid place-items-center mx-4 mb-5">
-                + Add card
-              </div>
-              <div>
-                <label className="text-[16px] font-semibold px-4">
-                  Subscription Data
-                </label>
-              </div>
-            </div>
-          </div>
+          {tab === "overview" && <Overview id={id} />}
+          {tab === "invoice" && <Invoice id={id} />}
+          {tab === "payment" && <Payments id={id} />}
+          {tab === "unused_payment" && <Unused_Payments id={id} />}
+          {tab === "comment" && <Comment id={id} />}
         </div>
       </div>
     </div>
