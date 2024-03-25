@@ -2,10 +2,17 @@ import { useState, useEffect } from "react";
 import { instanceOfAxios } from "../../../others/localstorage";
 import Image from "next/image";
 import Link from "next/link";
+import Overview from "../overview";
+import Invoice from "../invoice";
+import ExtraCharge from "../extra_charges";
+import Comment from "../comment";
+import Activity from "../activities";
+import Contacts from '../contacts/contacts'
 
 function SubscriptionDetail({ id }) {
   const [subscriptionList, setsubscriptionList] = useState([]);
   const [subscriptionData, setsubscriptionData] = useState([]);
+  const [tab, setTab] = useState("overview");
 
   const test_it = async () => {
     const response = await instanceOfAxios.get(`subscription/${id}`);
@@ -26,6 +33,10 @@ function SubscriptionDetail({ id }) {
     }
     cusData();
   }, [id]);
+
+  const changeTab = (tab_name) => {
+    setTab(tab_name);
+  };
   return (
     <div className="pl-60 py-[50px]">
       <div className="flex">
@@ -148,261 +159,78 @@ function SubscriptionDetail({ id }) {
             </div>
           </div>
           <div className=" sticky top-0 bg-white border-b border-[#ECECEC] flex gap-x-8 px-8">
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={`py-4 w-20 hover:text-[#309FED]  ${
+                tab === "overview"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => changeTab("overview")}
+            >
               <h6 className="font-bold text-center">OVERVIEW</h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={`py-4 w-20 hover:text-[#309FED]  ${
+                tab === "invoice"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => changeTab("invoice")}
+            >
               {" "}
               <h6 className="font-bold text-center">INVOICE</h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={`py-4 w-20 hover:text-[#309FED]  ${
+                tab === "activity"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => changeTab("activity")}
+            >
               {" "}
-              <h6 className="font-bold text-center">PAYMENTS</h6>
+              <h6 className="font-bold text-center">ACTIVITIES</h6>
             </div>
-            <div className="py-4 pl-1 w-21 hover:text-[#309FED] false">
+            <div
+              className={`py-4 w-21 hover:text-[#309FED]  ${
+                tab === "extra_charges"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => changeTab("extra_charges")}
+            >
               {" "}
-              <h6 className="font-bold text-center ">UNUSED PAYMENTS</h6>
+              <h6 className="font-bold text-center ">EXTRA CHARGES</h6>
             </div>
-            <div className="py-4 w-20 hover:text-[#309FED] false">
+            <div
+              className={`py-4 w-20 hover:text-[#309FED]  ${
+                tab === "comments"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => setTab("comments")}
+            >
               {" "}
               <h6 className="font-bold text-center">COMMENTS</h6>
             </div>
-          </div>
-          <div className="flex">
-            <div className="w-1/3 h-screen border-r">
-              <div className="grid place-items-center py-5 border-b">
-                <div>
-                  <Image
-                    src="/default_profile.svg"
-                    alt=""
-                    height="80"
-                    width="80"
-                  />
-                </div>
-                <label className="text-[16px] font-semibold py-3">Alish</label>
-                <lable className=" text-green-400 bg-green-50 px-2 rounded">
-                  live
-                </lable>
-              </div>
-
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  CUSTOMER CONTACT
-                </label>
-                <div className="flex items-center justify-between pt-2">
-                  <div>
-                    {" "}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="blue"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    {subscriptionData.customer &&
-                      subscriptionData.customer.email}
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest ">
-                  SUBSCRIPTION INFO
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="py-4">
-                    <p className="text-[11px] text-[#a3a5a7]">Plan Id</p>
-                    <div>{subscriptionData.plan_number}</div>
-                  </div>
-                  <div className="py-4">
-                    <p className="text-[11px] text-[#a3a5a7]">
-                      Subscription Code
-                    </p>
-                    <div>{subscriptionData.code}</div>
-                  </div>
-                </div>
-                {console.log(subscriptionData)}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <p className="text-[11px] text-[#a3a5a7]">Product</p>
-                    <div>
-                      {subscriptionData.product &&
-                        subscriptionData.product.name}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[11px] text-[#a3a5a7]">Repeat Every</p>
-                    <div>{subscriptionData.billing_cycle}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  OTHERS DETAILS
-                </label>
-                <div>
-                  {" "}
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="py-4">
-                      <p className="text-[11px] text-[#a3a5a7]">
-                        Activation Date
-                      </p>
-                      <div>
-                        {" "}
-                        <div>{subscriptionData.start_date}</div>
-                      </div>
-                    </div>
-                    <div className="py-4">
-                      <p className="text-[11px] text-[#a3a5a7]">
-                        Creation Date
-                      </p>
-                      <div>{subscriptionData.last_billing_date}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 border-b">
-                <label className="font-bold text-[#808080] tracking-widest">
-                  CONTACT PERSON
-                </label>
-                <div>
-                  <div className="grid grid-cols-2 gap-2 py-4">
-                    <div>
-                      <p className="text-[11px] text-[#a3a5a7]">First Name</p>
-                      <div>00990</div>
-                    </div>
-                    <div>
-                      <p className="text-[11px] text-[#a3a5a7]">Last Name</p>
-                      <div>00990</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 py-4">
-                    <div>
-                      <p className="text-[11px] text-[#a3a5a7]">Email</p>
-                      <div>00990</div>
-                    </div>
-                    <div>
-                      <p className="text-[11px] text-[#a3a5a7]">Phone</p>
-                      <div>00990</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 py-4">
-                    <div>
-                      <p className="text-[11px] text-[#a3a5a7]">Mobile</p>
-                      <div>00990</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-2/3 h-screen ">
-              <div className="grid grid-cols-2 p-4   ">
-                <div className="border">
-                  <div className="p-4">
-                    <p className="text-[11px] text-[#a3a5a7]">
-                      Subscription Amount
-                    </p>
-                    <p>¥ {subscriptionData.total}</p>
-                  </div>
-                </div>
-                <div className="border">
-                  {" "}
-                  <div className="p-4">
-                    <p className="text-[11px] text-[#a3a5a7]">
-                      Next Billing Date
-                    </p>
-                    <p>{subscriptionData.next_billing_date}</p>
-                  </div>
-                </div>
-                <div className="border">
-                  {" "}
-                  <div className="p-4">
-                    <p className="text-[11px] text-[#a3a5a7]">
-                      Last Billing Date
-                    </p>
-                    <p>{subscriptionData.last_billing_date}</p>
-                  </div>
-                </div>
-                <div className="border">
-                  {" "}
-                  <div className="p-4">
-                    <p className="text-[11px] text-[#a3a5a7]">
-                      Billing Cycles Left
-                    </p>
-                    <p>{subscriptionData.billing_cycle}</p>
-                  </div>
-                </div>
-              </div>
-
-              <table className="w-full">
-                <thead className="text-left bg-[#F8F8F8]">
-                  <tr>
-                    <th className="p-4">Plans & Addons Details</th>
-                    <th className="p-4">Price</th>
-                    <th className="p-4">Qty</th>
-                    <th className="p-4 text-right">Amt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscriptionData.plan && (
-                    <tr>
-                      <td className="p-4">
-                        {subscriptionData.plan.name}
-                        <p className="text-[#a3a5a7] text-[11px]">
-                          {subscriptionData.plan.description}
-                        </p>
-                      </td>
-                      <td className="p-4">
-                        {subscriptionData.plan.unit_price}
-                      </td>
-                      <td className="p-4">{subscriptionData.plan.quantity}</td>
-                      <td className="p-4">
-                        {subscriptionData.plan.quantity *
-                          subscriptionData.plan.unit_price}
-                      </td>
-                      <td></td>
-                    </tr>
-                  )}
-                  {subscriptionData.addons &&
-                    subscriptionData.addons.map((val) => (
-                      <tr>
-                        <td className="p-4">
-                          {val.name}
-                          <p className="text-[#a3a5a7] text-[11px]">
-                            {val.description}
-                          </p>
-                        </td>
-                        <td className="p-4">{val.unit_price}</td>
-                        <td className="p-4">{val.quantity}</td>
-                        <td className="p-4 text-right">
-                          {val.unit_price * val.quantity}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              <div className="px-4 py-4 flex justify-end">
-                <div className="px-8 text-left">
-                  <p className="py-2">Tax included </p>
-                  <p className="font-bold text-right pt-2">Total </p>
-                </div>
-                <div className=" ">
-                  <p className="py-2 text-right">
-                    ¥ {subscriptionData.total_tax_amount}{" "}
-                  </p>
-                  <p className="text-[20px]">¥ {subscriptionData.sub_total} </p>
-                </div>
-              </div>
+            <div
+              className={`py-4 w-20 hover:text-[#309FED]  ${
+                tab === "contacts"
+                  ? "border-b-2 border-[#309FED] text-[#309FED]"
+                  : ""
+              }`}
+              onClick={() => setTab("contacts")}
+            >
+              {" "}
+              <h6 className="font-bold text-center">CONTACTS</h6>
             </div>
           </div>
+          {tab && tab === "overview" ? <Overview id={id} /> : ""}
+          {tab && tab === "invoice" ? <Invoice id={id} /> : ""}
+          {tab && tab === "activity" ? <Activity id={id} /> : ""}
+          {tab && tab === "extra_charges" ? <ExtraCharge id={id} /> : ""}
+          {tab && tab === "comments" ? <Comment id={id} /> : ""}
+          {tab && tab === "contacts" ? <Contacts id={id} /> : ""}
         </div>
       </div>
     </div>

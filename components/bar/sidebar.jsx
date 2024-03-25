@@ -3,10 +3,10 @@ import Image from "next/image";
 
 function Sidebar() {
   return (
-    <div>
+    <div className>
       <aside
         id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-60 h-screen border-r border-[#ECECEC] transition-transform -translate-x-full sm:translate-x-0"
+        className="bg-white fixed top-0 left-0 z-40 w-60 h-screen border-r border-[#ECECEC] transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto border-b border-slate-500">
