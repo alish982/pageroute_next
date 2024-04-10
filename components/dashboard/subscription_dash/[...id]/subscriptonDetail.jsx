@@ -7,7 +7,7 @@ import Invoice from "../invoice";
 import ExtraCharge from "../extra_charges";
 import Comment from "../comment";
 import Activity from "../activities";
-import Contacts from '../contacts/contacts'
+import Contacts from "../contacts/contacts";
 
 function SubscriptionDetail({ id }) {
   const [subscriptionList, setsubscriptionList] = useState([]);
@@ -17,7 +17,6 @@ function SubscriptionDetail({ id }) {
   const test_it = async () => {
     const response = await instanceOfAxios.get(`subscription/${id}`);
     setsubscriptionData(response.data.data);
-    console.log(response.data.data, "d");
   };
 
   const cusData = async () => {
@@ -58,7 +57,7 @@ function SubscriptionDetail({ id }) {
                     strokeLinejoin="round"
                     d="M12 4.5v15m7.5-7.5h-15"
                   />
-                </svg>
+                </svg> 
               </button>
             </div>
           </div>

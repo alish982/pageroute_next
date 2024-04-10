@@ -16,11 +16,7 @@ function Dashboard() {
     setPlan(response.data.data);
 
     const statData = await instanceOfAxios.get("dashboard/statistics");
-
-    console.log("data");
-
     setdashStat(statData.data.data);
-    console.log(dashStat);
 
     const newresponse = await instanceOfAxios.get(
       "dashboard/subscription_summary"
@@ -35,7 +31,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="flex-col pl-72 pt-24">
+    <div className={`flex-col pl-72 pt-24`}>
       <div className="flex flex-col xl:flex-row justify-between gap-4">
         <div className="p-4 flex flex-col gap-4 basis-4/6">
           <div className="-ml-12 -mt-4">
@@ -282,4 +278,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-

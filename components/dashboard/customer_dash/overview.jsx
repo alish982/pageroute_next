@@ -26,7 +26,12 @@ function Overview({ id }) {
       <div className="w-1/3 h-screen border-r">
         <div className="grid place-items-center py-5 border-b">
           <div>
-            <Image src="/default_profile.svg" alt="" height="80" width="80" />
+            <Image
+              src={customerDetails.profile}
+              alt=""
+              height="80"
+              width="80"
+            />
           </div>
 
           {isLoading ? (
@@ -560,7 +565,6 @@ function Overview({ id }) {
                 <div className="">
                   <p className="px-4 mb-1 hover:text-[#309fed] font-bold">
                     {val.plan.name}
-                    {console.log(val)}
                   </p>
                   <p className="text-sm px-4 ">
                     Subscription ID: {val.code} | Subscription #:

@@ -212,7 +212,7 @@ function CusList() {
 
           <div className="pl-6 pr-0 bg-white">
             <div className="w-full dark:bg-[#393d50] overflow-y-auto h-screen">
-              <table className="table-auto-w-full">
+              <table className="table-auto-w-full ">
                 <thead className="border-b dark:border-neutral-500">
                   <tr className="text-left bg-[#F8F8F8] dark:bg-gray-700">
                     <th scope="col" className="pl-11 py-4">
@@ -321,11 +321,13 @@ function CusList() {
                           </label>
                         </div>
                       </td>
-                      <Link href={`/cusDetails/details/${post.id}`}>
-                        <td scope="row" className=" py-4 hover:text-[#309fed]">
+
+                      <td scope="row" className=" py-4 hover:text-[#309fed]">
+                        <Link href={`/cusDetails/details/${post.id}`}>
                           {post.customer_number}
-                        </td>
-                      </Link>
+                        </Link>
+                      </td>
+
                       <td scope="row" className="px-6 py-4">
                         {post.first_name} {post.last_name}
                       </td>

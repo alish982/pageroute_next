@@ -21,10 +21,10 @@ function UserList() {
       .get(`user?page=` + page + "&per_page=" + perpage)
       .then((response) => {
         setUser(response.data.data.items);
-        console.log(response.data.data);
+        
         setPage(response.data.data.page);
         setShowPopup(response.status);
-        console.log(response);
+      
         response.status === 200
           ? setShowPopup({
               status: true,

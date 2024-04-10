@@ -1,21 +1,20 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { instanceOfAxios } from "../others/localstorage";
-import axios from "axios";
 import Pagination from "../others/pagination";
 import Button from "./button";
 
 function Subscription() {
   const [user, setUser] = useState([]);
   let [page, setPage] = useState(1);
-  let [perpage, setPerPage] = useState(4);
+  let [perpage] = useState(4);
   let [search, setSearch] = useState("");
   let [sort, setSort] = useState("asc");
   let [filter, setFilter] = useState("live");
   let [sortBy, setSortBy] = useState("created_at");
   let [show, setShow] = useState(false);
   const [permissinData, setPermissionData] = useState([]);
-  const [addnew, setAddNew] = useState(false);
+  const [addnew, setAddNew] = useState(true);
   const code = [801, 802, 803, 804, 805, 806, 807, 808, 809];
 
   const test_it = async () => {
@@ -52,7 +51,6 @@ function Subscription() {
   }
 
   function handleOrder() {
-    console.log("working");
     sort === "asc" ? setSort("desc") : setSort("asc");
   }
 
@@ -65,7 +63,7 @@ function Subscription() {
           response.data.data.subscription.map((val) => val.code)
         );
       });
-    permissinData.includes("800") ? setAddNew(true) : "";
+    permissinData.includes("804") ? setAddNew(true) : "";
   };
 
   return (
@@ -262,11 +260,13 @@ function Subscription() {
                           </label>
                         </div>
                       </td>
-                      <Link href={`/subsDetals/details/${post.id}`}>
-                        <td scope="row" className=" py-4 hover:text-[#309fed]">
+
+                      <td scope="row" className="py-4 hover:text-[#309fed]">
+                        <Link href={`/subsDetals/details/${post.id}`}>
                           {post.code}
-                        </td>
-                      </Link>
+                        </Link>
+                      </td>
+
                       <td scope="row" className="px-6 py-4">
                         {post.plan_number}
                       </td>
@@ -302,6 +302,7 @@ function Subscription() {
                           className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end "
                           href={`/user/update/${post.id}`}
                         >
+                          
                           Update
                         </Link>
                       </td>

@@ -17,7 +17,7 @@ function Overview({ id }) {
   }, [id]);
   return (
     <div className="flex">
-      <div className="w-1/3 h-screen border-r">
+      <div className="w-1/3  border-r">
         <div className="grid place-items-center py-5 border-b">
           <div>
             <Image src="/default_profile.svg" alt="" height="80" width="80" />
@@ -104,39 +104,6 @@ function Overview({ id }) {
             </div>
           </div>
         </div>
-        <div className="p-4 border-b">
-          <label className="font-bold text-[#808080] tracking-widest">
-            CONTACT PERSON
-          </label>
-          <div>
-            <div className="grid grid-cols-2 gap-2 py-4">
-              <div>
-                <p className="text-[11px] text-[#a3a5a7]">First Name</p>
-                <div>00990</div>
-              </div>
-              <div>
-                <p className="text-[11px] text-[#a3a5a7]">Last Name</p>
-                <div>00990</div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 py-4">
-              <div>
-                <p className="text-[11px] text-[#a3a5a7]">Email</p>
-                <div>00990</div>
-              </div>
-              <div>
-                <p className="text-[11px] text-[#a3a5a7]">Phone</p>
-                <div>00990</div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 py-4">
-              <div>
-                <p className="text-[11px] text-[#a3a5a7]">Mobile</p>
-                <div>00990</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div className="w-2/3 h-screen ">
         <div className="grid grid-cols-2 p-4   ">
@@ -180,7 +147,7 @@ function Overview({ id }) {
           </thead>
           <tbody>
             {subscriptionData.plan && (
-              <tr>
+              <tr key={subscriptionData.plan.id}>
                 <td className="p-4">
                   {subscriptionData.plan.name}
                   <p className="text-[#a3a5a7] text-[11px]">
@@ -189,7 +156,7 @@ function Overview({ id }) {
                 </td>
                 <td className="p-4">{subscriptionData.plan.unit_price}</td>
                 <td className="p-4">{subscriptionData.plan.quantity}</td>
-                <td className="p-4">
+                <td className="p-4 text-right">
                   {subscriptionData.plan.quantity *
                     subscriptionData.plan.unit_price}
                 </td>

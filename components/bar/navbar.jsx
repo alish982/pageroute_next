@@ -85,7 +85,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="w-9 h-9"
+              className="w-9 h-9 hover:stroke-blue-500"
             >
               <path
                 strokeLinecap="round"

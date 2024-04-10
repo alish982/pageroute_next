@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
@@ -7,8 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { instanceOfAxios } from "../others/localstorage";
-
-//import Select from 'react-select'
+import SubSubmit from "./subs_regi_spage";
 
 const SubRegister = () => {
   const [date, setDate] = useState(new Date());
@@ -18,6 +16,8 @@ const SubRegister = () => {
   const [planID, setPlanID] = useState("");
   const [productPlan, setProductPlan] = useState("0");
   const [raiseInvoice, setRaiseInvoice] = useState("");
+  const [response, setResponse] = useState({});
+  const [values, setValues] = useState({});
 
   const [optionCus, setOptionCus] = useState([]);
   const [showPopup, setShowPopup] = useState({
@@ -28,27 +28,40 @@ const SubRegister = () => {
   });
 
   const [initialValue, setValue] = useState({
-    billing_cycle: "",
-    customer_id: "",
-    customer_name: "",
-    invoice_creation_day: "",
-    plan_id: "",
-    plan_number: "",
-    proudct_id: "",
-    product_name: "",
-    start_date: "",
     subscriber_name: "",
+    plan_number: "",
+    status: "live",
     subscriber_relation: "",
+    product_id: "",
+    auto_collect: false,
+    is_recurring: true,
+    customer_id: "",
+    invoice_creation_day: "1",
+    billing_cycle: "",
+    skip_initial_invoice: "true",
+    invoice_now: "true",
+    has_setup_fee: "true",
+    apply_discount_for_past: "true",
     plan: {
       id: "",
-      quantity: "",
-      price: "",
-      product_id: "",
-      interval_unit: "",
-      name: "",
+      quantity: "1",
+      description: "",
+      unit_price: "",
+      tax_id: "",
       setup_fee: "",
     },
+    addon: {},
+    addons: [],
+    coupons: [],
   });
+
+  //formatting date in year-month-day
+  const dd = new Date(date);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const formattedDate = `${year}-${month}-${day}`;
 
   const router = useRouter();
 
@@ -56,21 +69,13 @@ const SubRegister = () => {
     initialValues: initialValue,
 
     onSubmit: async (values) => {
-      const data = await instanceOfAxios
-        .post(
-          "subscription", 
-           {
-          method: 'POST',
-          body: JSON.stringify(values),
-          headers: {
-            'content-type': 'application/json',
-          },
-        }
-          
-        )
+      setValues(values);
+      await instanceOfAxios
+        .post("subscription/calculate", values)
         .then((data) => {
+          setResponse(data.data.data);
           setShowPopup(data.status);
-          console.log(data);
+
           data.status === 200
             ? setShowPopup({
                 status: true,
@@ -84,11 +89,14 @@ const SubRegister = () => {
                 messageDetails: "couldn't create user",
                 statusCode: 400,
               });
-          if (data.status === 200) {
-            router.push("/dash/customer");
-          } else {
-            router.push("/auth/cus_register");
-          }
+          // if (data.status === 200) {
+          //   router.push({
+          //     pathname: "/auth/sec_subs_redi",
+          //     query: { responseData: JSON.stringify(response) },
+          //   });
+          // } else {
+          //   router.push("/auth/cus_register");
+          // }
         });
     },
   });
@@ -98,7 +106,7 @@ const SubRegister = () => {
       setOptionCus(
         response.data.data.items.map((row) => {
           let newRow = {};
-          newRow.value = row.first_name + " " + row.last_name;
+          newRow.value = row.id;
           newRow.label = row.first_name + " " + row.last_name;
           return newRow;
         })
@@ -140,6 +148,16 @@ const SubRegister = () => {
         })
       );
     });
+
+  useEffect(() => {
+    if (response && Object.keys(response).length > 0) {
+     
+      router.push({
+        pathname: "/auth/sec_subs_redi",
+        query: { responseData: JSON.stringify({ response, values }) },
+      });
+    }
+  }, [response]);
 
   useEffect(() => {
     customer_func();
@@ -187,24 +205,23 @@ const SubRegister = () => {
                 <Select
                   className="appearance-none block w-full text-gray-700 rounded focus:outline-none focus:bg-white focus:border-blue-500"
                   type="text"
-                  name="customer_name"
+                  name="customer_id"
                   options={optionCus}
                   value={{
-                    value: formik.values.customer_name,
-                    label: formik.values.customer_name,
+                    label: formik.values.subscriber_name,
+                    value: formik.values.customer_id,
                   }}
                   onChange={(newVal) => {
-                    formik.setFieldValue("customer_name", newVal.value);
-                    formik.setFieldValue("subscriber_name", newVal.value);
+                    formik.setFieldValue("status");
+                    formik.setFieldValue("customer_id", newVal.value);
+                    formik.setFieldValue("subscriber_name", newVal.label);
                     formik.setFieldValue("subscriber_relation", "self");
                   }}
                   onBlur={formik.handleBlur}
                 />
               </div>
               <div className="w-full md:w-1/2 px-3 mb-2 md:mb-0">
-                <label className="  " htmlFor="grid-first-name">
-                  Subscriber Name
-                </label>
+                <label className=" ">Subscriber Name</label>
                 <input
                   className="w-full text-gray-700 border border-slate-300 rounded py-3 px-4 mb-3 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
                   type="text"
@@ -212,15 +229,17 @@ const SubRegister = () => {
                   name="subscriber_name"
                   value={formik.values.subscriber_name}
                   onChange={(newVal) => {
-                    formik.setFieldValue("subscriber_name", newVal.value);
+                    formik.setFieldValue(
+                      "subscriber_name",
+                      newVal.target.value
+                    );
                   }}
                   onBlur={formik.handleBlur}
                 />
               </div>
+
               <div className=" md:w-1/2 md:mb-0">
-                <label className=" text-gray-700" htmlFor="grid-first-name">
-                  Subscriber Relation*
-                </label>
+                <label className=" text-gray-700">Subscriber Relation*</label>
                 <Select
                   className="w-[484px] appearance-none block w-full text-gray-700 rounded mb-3 mt-2 focus:outline-none focus:bg-white"
                   type="number"
@@ -241,9 +260,7 @@ const SubRegister = () => {
             <div className="mt-5">
               <label className="text-[16px] font-bold ">Product</label>
               <div className="w-full md:w-1/2 mt-5 mb-6 md:mb-0">
-                <label className=" " htmlFor="grid-first-name">
-                  Select Product *
-                </label>
+                <label className=" ">Select Product *</label>
                 <Select
                   className=" w-[484px] text-gray-700 rounded mb-10 mt-2 focus:outline-none focus:bg-white"
                   type="text"
@@ -257,6 +274,7 @@ const SubRegister = () => {
                     setProductId(newValue.value);
                     product_planFunc();
                     formik.setFieldValue("product_name", newValue.label);
+                    formik.setFieldValue("product_id", newValue.id);
                     setPlanID(newValue.active_plan_count);
                   }}
                   onBlur={formik.handleBlur}
@@ -268,28 +286,43 @@ const SubRegister = () => {
               {planID >= 1 ? (
                 <div className="flex mb-3">
                   <div className="w-full md:w-1/2 md:mb-0">
-                    <label className=" " htmlFor="grid-first-name">
-                      Select Plan *
-                    </label>
+                    <label className="">Select Plan *</label>
 
                     <Select
                       className="appearance-none block w-full text-gray-700 rounded py-3 mb-3 -mt-1 leading-tight focus:outline-none focus:bg-white"
-                      id="grid-first-name"
                       type="text"
                       options={productPlan}
                       placeholder="plan Name"
                       name=""
                       value={{
-                        label: formik.values.product_planname,
-                        value: formik.values.product_planname,
+                        label: formik.values.plan.name,
+                        value: formik.values.plan.name,
                       }}
                       onChange={(newValue) => {
-                        console.log(newValue, "newvaldd");
-                        formik.setFieldValue("product_planname", newValue.name);
-                        formik.setFieldValue("product_price", newValue.price);
-                        formik.setFieldValue("product_ammount", newValue.price);
+                        formik.setFieldValue("plan.name", newValue.name);
                         formik.setFieldValue(
-                          "plan_type",
+                          "plan.description",
+                          newValue.description
+                        );
+                        formik.setFieldValue("plan.id", newValue.id);
+                        formik.setFieldValue("plan.unit_price", newValue.price);
+                        formik.setFieldValue("interval", newValue.interval);
+                        formik.setFieldValue("plan.tax_id", newValue.tax_id);
+
+                        formik.setFieldValue(
+                          "billing_cycle",
+                          newValue.billing_cycle
+                        );
+                        formik.setFieldValue(
+                          "plan.product_id",
+                          newValue.product_id
+                        );
+                        formik.setFieldValue(
+                          "plan.setup_fee",
+                          newValue.setup_fee
+                        );
+                        formik.setFieldValue(
+                          "plan.interval_unit",
                           newValue.interval_unit
                         );
                       }}
@@ -298,24 +331,21 @@ const SubRegister = () => {
                   </div>
 
                   <div className="w-full md:w-1/2 pl-4 pr-1 mb-6 md:mb-0">
-                    <label className=" mb-2" htmlFor="grid-first-name">
-                      price
-                    </label>
+                    <label className=" mb-2">price</label>
                     <input
                       className=" border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
                       id="grid-first-name"
                       type="number"
                       placeholder=""
                       name="product_price"
-                      value={formik.values.product_price}
+                      value={formik.values.plan.price}
                       onBlur={formik.handleBlur}
                     />
                   </div>
                   <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <label className="   mb-2">Quantity</label>
+                    <label className="mb-2">Quantity</label>
                     <input
                       className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
-                      id="grid-first-name"
                       type="text"
                       placeholder="Ncell"
                       name="product_quantity"
@@ -324,19 +354,13 @@ const SubRegister = () => {
                     />
                   </div>
                   <div className="w-full md:w-1/2 pl-1 mb-6 md:mb-0">
-                    <label className="   mb-2" htmlFor="grid-first-name">
-                      Amount
-                    </label>
+                    <label className=" mb-2">Amount</label>
                     <input
                       className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
-                      id="grid-first-name"
                       type="varcar"
                       placeholder="Ncell"
                       name="product_ammount"
-                      value={[
-                        formik.values.product_ammount,
-                        formik.values.plan_type,
-                      ]}
+                      value={[formik.values.product_ammount]}
                       onBlur={formik.handleBlur}
                     />
                   </div>
@@ -353,9 +377,7 @@ const SubRegister = () => {
               <div className="mt-5">
                 <div className="flex">
                   <div className="w-full md:w-1/2 md:mb-0">
-                    <label className=" mb-2" htmlFor="grid-first-name">
-                      Plan Number *
-                    </label>
+                    <label className=" mb-2">Plan Number *</label>
 
                     <input
                       className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
@@ -364,24 +386,22 @@ const SubRegister = () => {
                       placeholder="Enter plan number"
                       name="plan_number"
                       onChange={(val) => {
-                        formik.setFieldValue("plan_number", val);
+                        formik.setFieldValue("plan_number", val.target.value);
                       }}
                     />
                   </div>
 
                   <div className=" flex flex-col w-full md:w-1/2 pl-5 mb-6 md:mb-0">
-                    <label className=" mb-2" htmlFor="grid-first-name">
-                      Start Date *
-                    </label>
+                    <label className=" mb-2">Start Date *</label>
 
                     <DatePicker
                       className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                       id="grid-first-name"
                       type="varchar"
                       placeholder=""
-                      name="start_data"
+                      name="start_date"
                       onChange={(date) => {
-                        formik.setFieldValue("start_date", date);
+                        formik.setFieldValue("start_date", formattedDate);
                         setDate(date);
                       }}
                       selected={date}
@@ -392,34 +412,28 @@ const SubRegister = () => {
               </div>
               <div className="flex">
                 <div className="w-full md:w-1/2 mb-6 md:mb-0">
-                  <label className=" mb-2" htmlFor="grid-first-name">
-                    Billing Cycle *
-                  </label>
+                  <label className=" mb-2">Billing Cycle *</label>
 
                   <input
                     className="border border-slate-300 ppearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
-                    id="grid-first-name"
                     type="text"
                     placeholder=""
                     name="billing_cycle"
-                    onChange={(value) => {
-                      formik.setFieldValue("billing_cycle", value);
+                    onChange={(val) => {
+                      formik.setFieldValue("billing_cycle", val.target.value);
                     }}
                   />
                 </div>
                 <div className="w-full md:w-1/2 pl-5 mb-6 md:mb-0">
-                  <label className="   mb-2" htmlFor="grid-first-name">
-                    Invoice Billing Day *
-                  </label>
+                  <label className=" mb-2">Invoice Billing Day *</label>
 
                   <input
-                    className=" border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3  mt-2 leading-tight focus:outline-none focus:bg-white"
-                    id="grid-first-name"
+                    className=" border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     placeholder=""
                     name="interval"
-                    onChange={(value) => {
-                      formik.setFieldValue("interval", value);
+                    onChange={(val) => {
+                      formik.setFieldValue("interval", val.target.value);
                     }}
                   />
                 </div>
@@ -458,7 +472,10 @@ const SubRegister = () => {
                   type="radio"
                   name="skip"
                   value="0"
-                  onClick={() => setRaiseInvoice("yes")}
+                  onClick={() => {
+                    setRaiseInvoice("yes"),
+                      formik.setFieldValue("skip_initial_invoice", true);
+                  }}
                 />{" "}
                 &nbsp;yes &nbsp;&nbsp;
                 <input
@@ -466,7 +483,10 @@ const SubRegister = () => {
                   name="skip"
                   value="1"
                   defaultChecked
-                  onClick={() => setRaiseInvoice("no")}
+                  onClick={() => {
+                    setRaiseInvoice("no"),
+                      formik.setFieldValue("skip_intial_value", false);
+                  }}
                 />{" "}
                 &nbsp;No <br></br>
               </div>
@@ -478,11 +498,24 @@ const SubRegister = () => {
                   </label>
                   <br />
                   <div className="mt-2 flex">
-                    <input type="radio" name="no" id="yes" value="1" /> &nbsp;
-                    <label for="yes">Invoice Now &nbsp;&nbsp;</label>
-                    <input type="radio" name="no" id="no" value="2" />
+                    <input
+                      type="radio"
+                      name="no"
+                      id="yes"
+                      value="0"
+                      onClick={() => formik.setFieldValue("invoice_now", true)}
+                    />{" "}
+                    &nbsp;
+                    <label>Invoice Now &nbsp;&nbsp;</label>
+                    <input
+                      type="radio"
+                      name="no"
+                      id="no"
+                      value="1"
+                      onClick={() => formik.setFieldValue("invoice_now", false)}
+                    />
                     &nbsp;{" "}
-                    <label for="no">
+                    <label >
                       Add to unbilled charges and invoice later{" "}
                     </label>
                   </div>

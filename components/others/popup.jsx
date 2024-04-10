@@ -1,7 +1,6 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 function Success({ showPopup, setShowPopup }) {
- 
   const handleClick = () => {
     setShowPopup({ status: false });
   };
@@ -32,7 +31,7 @@ function Success({ showPopup, setShowPopup }) {
         <div className="p-2">
           <Image
             className="mt-1"
-            src={showPopup.statusCode === 200 ? '/success.png' : '/failed.png'}
+            src={showPopup.statusCode === 200 ? "/success.png" : "/failed.png"}
             alt=""
             height="31"
             width="31"

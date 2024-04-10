@@ -55,7 +55,7 @@ const PaymentRegi = () => {
     send_mail: "1",
     apply_to_invoice: "",
     send_main: "",
-    payAmount: ""
+    payAmount: "",
   });
 
   const router = useRouter();
