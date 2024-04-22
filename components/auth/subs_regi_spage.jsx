@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { instanceOfAxios } from "../others/localstorage";
 import Success from "../others/popup";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
+
 function SubSubmit() {
   const [value, setValue] = useState({});
   const [parseData, setParsedData] = useState({});
@@ -48,8 +51,10 @@ function SubSubmit() {
     });
   };
 
+  const mBar = useRecoilValue(miniBar);
+
   return (
-    <div className="flex pl-72 py-10">
+    <div className={` ${mBar ? "pl-72" : "pl-32"} py-10 flex`}>
       <div className="w-1/3 h-screen ">
         <div className="flex gap-x-4 py-6 my-5 border-b border-[#ECECEC]">
           <div className="pl-8">

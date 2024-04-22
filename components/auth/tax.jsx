@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
+import { businessNameState } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function AddTax() {
   const [initialValue] = useState({
@@ -12,6 +14,7 @@ function AddTax() {
     description: "",
   });
   const router = useRouter();
+  const minBar = useRecoilValue(businessNameState);
 
   const schema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -32,7 +35,7 @@ function AddTax() {
   });
   return (
     <div>
-      <div className=" pl-72 py-8 pr-10">
+      <div className={` ${minBar ? "pl-72" : "pl-32"} py-8 pr-10`}>
         <div className="bg-white mt-10 ">
           <div className="flex gap-x-4 p-6 border-b border-[#ECECEC]">
             <div className="pl-8">
@@ -108,7 +111,7 @@ function AddTax() {
               <label>Description</label>
               <textarea
                 type="text"
-                className="w-[485px] h-[130px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
+                className="w-[485px] h-[150px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
                 value={formik.values.description}
                 onChange={(e) => {
                   formik.setFieldValue("description", e.target.value);

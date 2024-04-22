@@ -8,11 +8,14 @@ import ExtraCharge from "../extra_charges";
 import Comment from "../comment";
 import Activity from "../activities";
 import Contacts from "../contacts/contacts";
+import { miniBar } from "../../../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function SubscriptionDetail({ id }) {
   const [subscriptionList, setsubscriptionList] = useState([]);
   const [subscriptionData, setsubscriptionData] = useState([]);
   const [tab, setTab] = useState("overview");
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     const response = await instanceOfAxios.get(`subscription/${id}`);
@@ -36,8 +39,9 @@ function SubscriptionDetail({ id }) {
   const changeTab = (tab_name) => {
     setTab(tab_name);
   };
+
   return (
-    <div className="pl-60 py-[50px]">
+    <div className={` ${mBar ? "pl-68" : "pl-32"} py-[50px]`}>
       <div className="flex">
         <div className="w-1/2 h-screen border-r overflow-y-auto">
           <div className="sticky top-0 bg-white w-full border-r border-b border-[#ECECEC]">
@@ -57,37 +61,41 @@ function SubscriptionDetail({ id }) {
                     strokeLinejoin="round"
                     d="M12 4.5v15m7.5-7.5h-15"
                   />
-                </svg> 
+                </svg>
               </button>
             </div>
           </div>
 
           {subscriptionList.map((val) => (
-            <div
-              key={val.id}
-              className="flex items-center justify-between px-6 py-6"
-            >
-              <div className="flex ">
-                <input type="checkbox" className="mr-3 mb-6" />
-                <div className="flex flex-col">
-                  <label className="font-semibold text-[13px]">
-                    {val.subscriber_name}
-                  </label>
-                  <label>{val.plan.name}</label>
-                </div>
-              </div>
-              {val.status === "live" ? (
-                <div>
-                  <div className="bg-green-100 px-2.5 py-0.5 rounded">live</div>
-                </div>
-              ) : (
-                <div>
-                  <div className="bg-red-100 px-2.5 py-0.5 rounded">
-                    inactive
+            <Link href={`/subsDetals/details/${val.id}`}>
+              <div
+                key={val.id}
+                className=" border-b flex items-center justify-between px-6 py-6"
+              >
+                <div className="flex ">
+                  <input type="checkbox" className="mr-3 mb-6" />
+                  <div className="flex flex-col">
+                    <label className="font-semibold text-[13px]">
+                      {val.subscriber_name}
+                    </label>
+                    <label>{val.plan.name}</label>
                   </div>
                 </div>
-              )}
-            </div>
+                {val.status === "live" ? (
+                  <div>
+                    <div className="bg-green-100 px-2.5 py-0.5 rounded">
+                      live
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="bg-red-100 px-2.5 py-0.5 rounded">
+                      inactive
+                    </div>
+                  </div>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
 

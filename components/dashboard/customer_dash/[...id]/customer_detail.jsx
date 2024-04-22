@@ -5,12 +5,16 @@ import Overview from "../overview";
 import Payments from "../payment.jsx";
 import Unused_Payments from "../unused_payment";
 import Comment from "../comment";
+import { miniBar } from "../../../others/atom/atoms";
+import { useRecoilValue } from "recoil";
+import Link from "next/link";
 
 function CustomerDetail({ id }) {
   const [customerList, setCustomerList] = useState([]);
   const [customerDetails, setCustomerDetails] = useState([]);
   const [isLoading, setLoading] = useState(true);
   let [tab, changeTab] = useState("overview");
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     const response = await instanceOfAxios.get(`customer/${id}`);
@@ -38,7 +42,7 @@ function CustomerDetail({ id }) {
   }, [id]);
 
   return (
-    <div className="pl-60 py-[50px]">
+    <div className={` ${mBar ? "pl-72" : "pl-32"} py-[50px]`}>
       <div className="flex">
         <div
           className=" h-screen border-r overflow-y-auto"
@@ -67,34 +71,36 @@ function CustomerDetail({ id }) {
           </div>
 
           {customerList.map((val) => (
-            <div
-              key={val.id}
-              className="flex items-center justify-between px-6 py-6 "
-            >
-              <div className="flex  ">
-                <input type="checkbox" className="mr-3 mb-6" />
-                <div className="flex flex-col">
-                  <label className="font-semibold text-[13px]">
-                    {val.first_name}
-                    {val.last_name}
-                  </label>
-                  <label>¥ 0</label>
+            <Link href={`/cusDetails/details/${val.id}`}>
+              <div
+                key={val.id}
+                className="border-b border-slate-200 flex items-center justify-between px-6 py-6 "
+              >
+                <div className="flex  ">
+                  <input type="checkbox" className="mr-3 mb-6" />
+                  <div className="flex flex-col">
+                    <label className="font-semibold text-[13px]">
+                      {val.first_name}
+                      {val.last_name}
+                    </label>
+                    <label>¥ 0</label>
+                  </div>
                 </div>
+                {val.is_active ? (
+                  <div>
+                    <div className="bg-green-100 px-2.5 py-0.5 rounded">
+                      active
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="bg-red-100 px-2.5 py-0.5 rounded">
+                      inactive
+                    </div>
+                  </div>
+                )}
               </div>
-              {val.is_active ? (
-                <div>
-                  <div className="bg-green-100 px-2.5 py-0.5 rounded">
-                    active
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="bg-red-100 px-2.5 py-0.5 rounded">
-                    inactive
-                  </div>
-                </div>
-              )}
-            </div>
+            </Link>
           ))}
         </div>
 

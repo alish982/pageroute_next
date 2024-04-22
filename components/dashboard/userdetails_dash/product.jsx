@@ -5,6 +5,8 @@ import axios from "axios";
 import Pagination from "../../others/pagination";
 import Button from "../button";
 import AddProduct from "./addProduct";
+import { miniBar } from "@/components/others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function ProductList() {
   const [user, setUser] = useState([]);
@@ -16,6 +18,7 @@ function ProductList() {
   let [sortBy, setSortBy] = useState("created_at");
   let [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     await instanceOfAxios
@@ -56,7 +59,7 @@ function ProductList() {
   return (
     <div className="">
       <div className=" pt-16">
-        <div className="pl-52 ">
+        <div className={`${mBar ? "pl-52" : "pl-20"}`}>
           <div className="flex justify-between pl-16 pb-2 pt-8 pr-6">
             <div className="place-self-center">
               <h1 className="text-2xl font-semibold">Products</h1>
@@ -160,8 +163,8 @@ function ProductList() {
                         setSortBy("code"), handleOrder();
                       }}
                     >
-                      <div className="flex">
-                        <p> Code </p>
+                      <div className="flex hover:cursor-pointer hover:underline">
+                        <p className="hover:underline"> Code </p>
 
                         {sort === "asc" ? (
                           <div>

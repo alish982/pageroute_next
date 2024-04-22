@@ -4,6 +4,8 @@ import { instanceOfAxios } from "../others/localstorage";
 import Pagination from "../others/pagination";
 import Button from "./button";
 import InvoiceDetails from "./invoice/[...id]/invoiceDetails";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function Invoice() {
   const [user, setUser] = useState([]);
@@ -14,6 +16,7 @@ function Invoice() {
   let [filter, setFilter] = useState("all");
   let [sortBy, setSortBy] = useState("number");
   let [show, setShow] = useState(false);
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     await instanceOfAxios
@@ -55,7 +58,7 @@ function Invoice() {
   return (
     <div className="">
       <div className=" pt-16">
-        <div className="pl-52 ">
+        <div className={`${mBar ? "pl-52" : "pl-20"}`}>
           <div className="flex justify-between pl-16 pb-2 pt-8 pr-6">
             <div className="place-self-center">
               <h1 className="text-2xl font-semibold">Invoice</h1>

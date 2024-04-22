@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
@@ -9,8 +9,11 @@ import Profile from "./compo_register/profile";
 import Other from "./compo_register/other";
 import Document from "./compo_register/document";
 import Payment from "./compo_register/payment";
-import Success from "../others/popup";
+
 import { instanceOfAxios } from "../others/localstorage";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
+import * as Yup from "yup";
 
 //import Select from 'react-select'
 
@@ -57,11 +60,17 @@ const Cregister = () => {
     remark: "",
   });
 
+  const schema = Yup.object().shape({
+    first_name: Yup.string().required("name is required"),
+    email: Yup.string().required("email is required"),
+    customer_type: Yup.string().required("customer type is required"),
+  });
+  const mBar = useRecoilValue(miniBar);
   const router = useRouter();
 
   const formik = useFormik({
     initialValues: initialValue,
-
+    validationSchema: schema,
     onSubmit: async (values) => {
       let formData = new FormData();
 
@@ -111,7 +120,7 @@ const Cregister = () => {
   };
 
   return (
-    <div className=" pl-72 py-24 pr-10">
+    <div className={` ${mBar ? "pl-72" : "pl-32"} py-24 pr-10`}>
       <label className="pl-6 text-2xl font-bold text-gray-600 uppercase">
         Customer Signup
       </label>
@@ -126,10 +135,10 @@ const Cregister = () => {
               className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2"
               htmlFor="grid-last-name"
             >
-              Email
+              Email <span className="text-red-400">*</span>
             </label>
             <input
-              className=" w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
+              className=" w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-1 focus:outline-none focus:bg-white focus:border-blue-500"
               type="email"
               name="email"
               placeholder="something@gmail.com"
@@ -137,13 +146,18 @@ const Cregister = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.email && formik.errors.email ? (
+              <span className="text-red-500 px-1">Email is required *</span>
+            ) : (
+              ""
+            )}
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2"
               htmlFor="grid-first-name"
             >
-              First Name
+              First Name <span className="text-red-400">*</span>
             </label>
             <input
               className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 focus:outline-none focus:bg-white focus:border-blue-500"
@@ -154,13 +168,18 @@ const Cregister = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.first_name && formik.errors.first_name ? (
+              <span className="text-red-500 px-1">Name is required *</span>
+            ) : (
+              ""
+            )}
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 mt-1"
               htmlFor="grid-first-name"
             >
-              customer type
+              customer type <span className="text-red-400">*</span>
             </label>
             <input
               className="w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 focus:outline-none focus:bg-white focus:border-blue-500"
@@ -171,6 +190,13 @@ const Cregister = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.customer_type && formik.errors.customer_type ? (
+              <span className="text-red-500 px-1">
+                Customer type is required *
+              </span>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -263,27 +289,35 @@ const Cregister = () => {
         <div className="flex flex-row text-gray-700 text-lg ">
           <div
             onClick={() => changeTab("profile")}
-            className="inline-block px-2 py-1 rounded active:bg-red-400"
+            className={` ${
+              tab === "profile" ? "bg-[#309FED] text-white" : ""
+            } inline-block px-2 py-1 rounded `}
           >
             Profile
           </div>
           <div
             onClick={() => changeTab("other")}
-            className="px-4 inline-block px-2 py-1 rounded active:bg-red-400"
+            className={` ${
+              tab === "other" ? "bg-[#309FED] text-white" : ""
+            } inline-block px-2 py-1 rounded `}
           >
             {" "}
             Other
           </div>
           <div
             onClick={() => changeTab("document")}
-            className="px-4 inline-block px-2 py-1 rounded active:bg-red-400"
+            className={` ${
+              tab === "document" ? "bg-[#309FED] text-white" : ""
+            } inline-block px-2 py-1 rounded `}
           >
             {" "}
             document
           </div>
           <div
             onClick={() => changeTab("payment")}
-            className="px-4 inline-block px-2 py-1 rounded active:bg-red-400"
+            className={` ${
+              tab === "payment" ? "bg-[#309FED] text-white" : ""
+            } inline-block px-2 py-1 rounded `}
           >
             {" "}
             payment

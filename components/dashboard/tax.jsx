@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { instanceOfAxios } from "../others/localstorage";
 import axios from "axios";
 import Pagination from "../others/pagination";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function Tax() {
   const [user, setUser] = useState([]);
@@ -16,6 +18,7 @@ function Tax() {
     statusCode: "",
     statusText: "",
   });
+   const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     await instanceOfAxios
@@ -56,7 +59,7 @@ function Tax() {
   return (
     <div className="">
       <div className=" pt-16">
-        <div className="pl-52 ">
+        <div className={`${mBar ? "pl-52" : "pl-20"}`}>
           <div className="flex justify-between pl-16 pb-2 pt-8 pr-6">
             <div className="place-self-center">
               <h1 className="text-2xl font-semibold">Taxes</h1>

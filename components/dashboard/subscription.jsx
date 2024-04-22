@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { instanceOfAxios } from "../others/localstorage";
 import Pagination from "../others/pagination";
 import Button from "./button";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function Subscription() {
   const [user, setUser] = useState([]);
@@ -16,6 +18,7 @@ function Subscription() {
   const [permissinData, setPermissionData] = useState([]);
   const [addnew, setAddNew] = useState(true);
   const code = [801, 802, 803, 804, 805, 806, 807, 808, 809];
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     await instanceOfAxios
@@ -69,7 +72,7 @@ function Subscription() {
   return (
     <div className="">
       <div className=" pt-16">
-        <div className="pl-52 ">
+        <div className={`${mBar ? "pl-52" : "pl-20"}`}>
           <div className="flex justify-between pl-16 pb-2 pt-8 pr-6">
             <div className="place-self-center">
               <h1 className="text-2xl font-semibold">Subscription</h1>
@@ -157,7 +160,7 @@ function Subscription() {
 
           <div className="pl-6 pr-0 bg-white">
             <div className="w-full dark:bg-[#393d50] overflow-y-auto h-screen">
-              <table className="table-auto-w-full">
+              <table className="table-auto w-full">
                 <thead className="border-b dark:border-neutral-500">
                   <tr className="text-left bg-[#F8F8F8] dark:bg-gray-700">
                     <th scope="col" className="pl-11 py-4">
@@ -302,7 +305,6 @@ function Subscription() {
                           className="bg-slate-300 inline-block text-l border-1 px-2 py-1 mb-1 rounded-md justify-end "
                           href={`/user/update/${post.id}`}
                         >
-                          
                           Update
                         </Link>
                       </td>

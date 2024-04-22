@@ -16,7 +16,7 @@ export default function Profile({ formik }) {
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3">
             <label
-              className="block tracking-wide text-gray-700 mb-2"
+              className="block tracking-wide text-lg font-bold text-gray-700 mb-2"
               htmlFor="grid-last-name"
             >
               Postal Code

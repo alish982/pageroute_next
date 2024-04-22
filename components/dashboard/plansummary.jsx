@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { instanceOfAxios } from "../others/localstorage";
-import axios from "axios";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function Dashboard() {
   const [plan, setPlan] = useState([{ plan: "h" }]);
   const [subData, setSubData] = useState([{ customers: "" }]);
   const [dashStat, setdashStat] = useState([]);
+  const mBar= useRecoilValue(miniBar)
 
   const test_it = async () => {
     const response = await instanceOfAxios.get("dashboard/plan_summary");
@@ -31,7 +33,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className={`flex-col pl-72 pt-24`}>
+    <div className={`flex-col ${mBar? 'pl-72': 'pl-40'} pt-24`}>
       <div className="flex flex-col xl:flex-row justify-between gap-4">
         <div className="p-4 flex flex-col gap-4 basis-4/6">
           <div className="-ml-12 -mt-4">

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import Success from '../others/popup';
-//import Select from 'react-select'
 
 const Register = () => {
   const [submitted, setSubmitted] = useState(false);

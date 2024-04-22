@@ -8,6 +8,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { instanceOfAxios } from "../others/localstorage";
 import Success from "../others/popup";
+import { miniBar} from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
+import * as Yup from "yup";
 
 //import Select from 'react-select'
 
@@ -58,10 +61,19 @@ const PaymentRegi = () => {
     payAmount: "",
   });
 
+  const mBar = useRecoilValue(miniBar);
   const router = useRouter();
+
+  const schema = Yup.object().shape({
+    customer_id: Yup.number().required("customer is required"),
+    amount: Yup.number().required("amount is required"),
+    paid_at: Yup.number().required("date type is required"),
+    mode: Yup.string().required("mode is required"),
+  });
 
   const formik = useFormik({
     initialValues: initialValue,
+    validationSchema: schema,
 
     onSubmit: async (values) => {
       let data = await instanceOfAxios.post("payment", values).then((data) => {
@@ -242,7 +254,8 @@ const PaymentRegi = () => {
   }, [customerID, cusPage]);
 
   return (
-    <div className=" pl-72 py-8 pr-10">
+    <div className={` ${mBar ? "pl-60" : "pl-32"} py-8 pr-10`}>
+      
       <div className="bg-white dark:bg-gray-500 mt-10 ">
         <div className="flex gap-x-4 p-6 border-b border-[#ECECEC]">
           <div className="pl-8">
@@ -277,7 +290,9 @@ const PaymentRegi = () => {
           <div className="w-4/7 p-6">
             <div className="py-8 grid grid-flow-row xl:grid-cols-2 gap-x-8 gap-y-4 border-b border-[#e5e5e5]">
               <div className="flex flex-col gap-y-2 form-group ">
-                <label className=" ">Customer Name *</label>
+                <label className=" ">
+                  Customer Name <span className="text-red-500">*</span>
+                </label>
 
                 <Select
                   className="appearance-none block w-full text-gray-700 rounded focus:outline-none focus:bg-white focus:border-blue-500"
@@ -310,13 +325,18 @@ const PaymentRegi = () => {
                   }}
                   onBlur={formik.handleBlur}
                 />
+                {formik.touched.customer_id && formik.errors.customer_id ? (
+                  <span className="text-red-500">Required *</span>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
 
             <div className="flex mt-5">
               <div className="w-full md:w-1/2 md:mb-0">
                 <label className="  " htmlFor="grid-first-name">
-                  Amount Received *
+                  Amount Received <span className="text-red-500">*</span>
                 </label>
                 <input
                   className="w-[485px] text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
@@ -330,6 +350,7 @@ const PaymentRegi = () => {
                   }}
                   onBlur={formik.handleBlur}
                 />
+
                 <div className="flex">
                   <input
                     type="checkbox"
@@ -340,15 +361,21 @@ const PaymentRegi = () => {
                       formik.setFieldValue("payAmount", dueAmt);
                     }}
                   />
+
                   <label className="">Received full amount (¥ {dueAmt})</label>
+                  {formik.touched.amount && formik.errors.amount ? (
+                    <span className="text-red-500"> Required *</span>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-              <div className=" flex flex-col md:w-1/2 md:mb-0 px-4">
+              <div className=" flex flex-col md:w-1/2 md:mb-0">
                 <label className=" mb-2" htmlFor="grid-first-name">
-                  Payment Date *
+                  Payment Date <span className="text-red-500">*</span>
                 </label>
                 <DatePicker
-                  className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white"
                   id="grid-first-name"
                   type="varchar"
                   placeholder=""
@@ -359,13 +386,18 @@ const PaymentRegi = () => {
                   }}
                   selected={date}
                 />
+                {formik.touched.paid_at && formik.errors.paid_at ? (
+                  <span className="text-red-500">Required * </span>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className=" mt-4 flex">
               <div className="flex w-full md:w-1/2 mt-5 mb-3 md:mb-0">
                 <div className="flex flex-col">
                   <label className=" " htmlFor="grid-first-name">
-                    Mode of Payment *
+                    Mode of Payment <span className="text-red-500">*</span>
                   </label>
                   <Select
                     className=" w-[484px] text-gray-700 rounded mb-10 mt-2 focus:outline-none focus:bg-white"

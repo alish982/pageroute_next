@@ -3,14 +3,17 @@ import { useState, useEffect } from "react";
 import { instanceOfAxios } from "../others/localstorage";
 import axios from "axios";
 import Pagination from "../others/pagination";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function UserPay() {
   const [user, setUser] = useState([]);
   let [page, setPage] = useState(1);
-  let [perpage, setPerPage] = useState(5);
+  let [perpage, setPerPage] = useState(7);
   let [search, setSearch] = useState("");
   let [sort, setSort] = useState("asc");
   let [sortBy, setSortBy] = useState("created_at");
+  const mBar = useRecoilValue(miniBar);
 
   const test_it = async () => {
     await instanceOfAxios
@@ -183,7 +186,7 @@ function UserPay() {
   return (
     <div className="">
       <div className=" pt-16">
-        <div className="pl-52 ">
+        <div className={`${mBar ? "pl-52" : "pl-20"}`}>
           <div className="flex justify-between pl-16 pb-2 pt-8 pr-6">
             <div className="place-self-center">
               <h1 className="text-2xl font-semibold">Payment</h1>
@@ -227,7 +230,7 @@ function UserPay() {
 
           <div className="px-6 bg-white">
             <div className="w-full dark:bg-[#393d50] overflow-y-auto h-screen">
-              <table className="table-auto-w-full">
+              <table className="table-auto w-full">
                 <thead className="border-b dark:border-neutral-500">
                   <tr className="text-left bg-[#F8F8F8] dark:bg-gray-700">
                     <th scope="col" className="pl-11 py-4">

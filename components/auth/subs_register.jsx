@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useFormik } from "formik";
+import { useFormik, validateYupSchema } from "formik";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { instanceOfAxios } from "../others/localstorage";
-import SubSubmit from "./subs_regi_spage";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
+import * as Yup from "yup";
 
 const SubRegister = () => {
   const [date, setDate] = useState(new Date());
@@ -55,6 +57,16 @@ const SubRegister = () => {
     coupons: [],
   });
 
+  const mBar = useRecoilValue(miniBar);
+  const schema = Yup.object().shape({
+    customer_id: Yup.number().required("customer is required"),
+    subscriber_name: Yup.string().required("name is required"),
+    subscriber_relation: Yup.string().required("relation is required"),
+    plan_number: Yup.string().required("plan number is required"),
+    interval: Yup.number().required("interval is required"),
+    billing_cycle: Yup.number().required("billing_cycle is required"),
+  });
+
   //formatting date in year-month-day
   const dd = new Date(date);
   const year = date.getFullYear();
@@ -67,8 +79,9 @@ const SubRegister = () => {
 
   const formik = useFormik({
     initialValues: initialValue,
-
+    validationSchema: schema,
     onSubmit: async (values) => {
+      console.log("hello people");
       setValues(values);
       await instanceOfAxios
         .post("subscription/calculate", values)
@@ -151,7 +164,6 @@ const SubRegister = () => {
 
   useEffect(() => {
     if (response && Object.keys(response).length > 0) {
-     
       router.push({
         pathname: "/auth/sec_subs_redi",
         query: { responseData: JSON.stringify({ response, values }) },
@@ -169,7 +181,7 @@ const SubRegister = () => {
   }, [product_id]);
 
   return (
-    <div className=" pl-72 py-8 pr-10">
+    <div className={` ${mBar ? "pl-72" : "pl-32"} py-8 pr-10`}>
       <div className="bg-white dark:bg-gray-500 mt-10 ">
         <div className="flex gap-x-4 p-6 border-b border-[#ECECEC]">
           <div className="pl-8">
@@ -200,7 +212,9 @@ const SubRegister = () => {
           <div className="w-4/7 p-6">
             <div className="py-8 grid grid-flow-row xl:grid-cols-2 gap-x-8 gap-y-4 border-b border-[#e5e5e5]">
               <div className="flex flex-col gap-y-2 form-group ">
-                <label className=" ">Select Customer *</label>
+                <label className=" ">
+                  Select Customer <span className="text-red-500">*</span>
+                </label>
 
                 <Select
                   className="appearance-none block w-full text-gray-700 rounded focus:outline-none focus:bg-white focus:border-blue-500"
@@ -219,11 +233,18 @@ const SubRegister = () => {
                   }}
                   onBlur={formik.handleBlur}
                 />
+                {formik.touched.customer_id && formik.errors.customer_id ? (
+                  <span className="text-red-500">Required *</span>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="w-full md:w-1/2 px-3 mb-2 md:mb-0">
-                <label className=" ">Subscriber Name</label>
+                <label className=" ">
+                  Subscriber Name <span className="text-red-500">*</span>
+                </label>
                 <input
-                  className="w-full text-gray-700 border border-slate-300 rounded py-3 px-4 mb-3 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
+                  className="w-full text-gray-700 border border-slate-300 rounded py-3 px-4 mb-2 mt-2 h-[38px] focus:outline-none focus:bg-white focus:border-blue-500"
                   type="text"
                   placeholder=""
                   name="subscriber_name"
@@ -236,13 +257,20 @@ const SubRegister = () => {
                   }}
                   onBlur={formik.handleBlur}
                 />
+                {formik.touched.subscriber_name &&
+                formik.errors.subscriber_name ? (
+                  <span className="text-red-500">Required *</span>
+                ) : (
+                  ""
+                )}
               </div>
 
               <div className=" md:w-1/2 md:mb-0">
-                <label className=" text-gray-700">Subscriber Relation*</label>
+                <label className=" text-gray-700">
+                  Subscriber Relation <span className="text-red-500">*</span>
+                </label>
                 <Select
                   className="w-[484px] appearance-none block w-full text-gray-700 rounded mb-3 mt-2 focus:outline-none focus:bg-white"
-                  type="number"
                   options={relation}
                   placeholder=""
                   name="subscriber_relation"
@@ -255,12 +283,20 @@ const SubRegister = () => {
                   }}
                   onBlur={formik.handleBlur}
                 />
+                {formik.touched.subscriber_relation &&
+                formik.errors.subscriber_relation ? (
+                  <span className="text-red-500">Required *</span>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div className="mt-5">
               <label className="text-[16px] font-bold ">Product</label>
               <div className="w-full md:w-1/2 mt-5 mb-6 md:mb-0">
-                <label className=" ">Select Product *</label>
+                <label className=" ">
+                  Select Product <span className="text-red-500">*</span>
+                </label>
                 <Select
                   className=" w-[484px] text-gray-700 rounded mb-10 mt-2 focus:outline-none focus:bg-white"
                   type="text"
@@ -286,7 +322,9 @@ const SubRegister = () => {
               {planID >= 1 ? (
                 <div className="flex mb-3">
                   <div className="w-full md:w-1/2 md:mb-0">
-                    <label className="">Select Plan *</label>
+                    <label className="">
+                      Select Plan <span className="text-red-500">*</span>
+                    </label>
 
                     <Select
                       className="appearance-none block w-full text-gray-700 rounded py-3 mb-3 -mt-1 leading-tight focus:outline-none focus:bg-white"
@@ -377,10 +415,12 @@ const SubRegister = () => {
               <div className="mt-5">
                 <div className="flex">
                   <div className="w-full md:w-1/2 md:mb-0">
-                    <label className=" mb-2">Plan Number *</label>
+                    <label className=" mb-2">
+                      Plan Number <span className="text-red-500">*</span>
+                    </label>
 
                     <input
-                      className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
+                      className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-1 mt-2 leading-tight focus:outline-none focus:bg-white"
                       id="grid-first-name"
                       type="text"
                       placeholder="Enter plan number"
@@ -389,10 +429,17 @@ const SubRegister = () => {
                         formik.setFieldValue("plan_number", val.target.value);
                       }}
                     />
+                    {formik.touched.plan_number && formik.errors.plan_number ? (
+                      <span className="text-red-500">Required * </span>
+                    ) : (
+                      ""
+                    )}
                   </div>
 
                   <div className=" flex flex-col w-full md:w-1/2 pl-5 mb-6 md:mb-0">
-                    <label className=" mb-2">Start Date *</label>
+                    <label className=" mb-2">
+                      Start Date <span className="text-red-500">*</span>
+                    </label>
 
                     <DatePicker
                       className="border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -407,12 +454,19 @@ const SubRegister = () => {
                       selected={date}
                       //onChange={(date) => setDate(date)}
                     />
+                    {formik.touched.start_date && formik.errors.start_date ? (
+                      <span className="text-red-500">Required *</span>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
               <div className="flex">
                 <div className="w-full md:w-1/2 mb-6 md:mb-0">
-                  <label className=" mb-2">Billing Cycle *</label>
+                  <label className=" mb-2">
+                    Billing Cycle <span className="text-red-500">*</span>
+                  </label>
 
                   <input
                     className="border border-slate-300 ppearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
@@ -423,9 +477,17 @@ const SubRegister = () => {
                       formik.setFieldValue("billing_cycle", val.target.value);
                     }}
                   />
+                  {formik.touched.billing_cycle &&
+                  formik.errors.billing_cycle ? (
+                    <span className="text-red-500">Required *</span>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <div className="w-full md:w-1/2 pl-5 mb-6 md:mb-0">
-                  <label className=" mb-2">Invoice Billing Day *</label>
+                  <label className=" mb-2">
+                    Invoice Billing Day <span className="text-red-500">*</span>
+                  </label>
 
                   <input
                     className=" border border-slate-300 appearance-none block w-full text-gray-700 rounded py-3 px-4 mb-3 mt-2 leading-tight focus:outline-none focus:bg-white"
@@ -436,6 +498,11 @@ const SubRegister = () => {
                       formik.setFieldValue("interval", val.target.value);
                     }}
                   />
+                  {formik.touched.interval && formik.errors.billing_cycle ? (
+                    <span className="text-red-500">Required *</span>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
@@ -515,9 +582,7 @@ const SubRegister = () => {
                       onClick={() => formik.setFieldValue("invoice_now", false)}
                     />
                     &nbsp;{" "}
-                    <label >
-                      Add to unbilled charges and invoice later{" "}
-                    </label>
+                    <label>Add to unbilled charges and invoice later </label>
                   </div>
                 </div>
               ) : (

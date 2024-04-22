@@ -2,19 +2,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { miniBar } from "../others/atom/atoms";
+import { useRecoilValue } from "recoil";
 
 function Sidebar() {
   const router = useRouter();
   const [tab, setTab] = useState("dashboard");
+  const mBar = useRecoilValue(miniBar);
 
   useEffect(() => {
     if (router.asPath.includes("/dash/customer")) {
+      setTab("customer");
+    } else if (router.asPath.includes("/auth/cus_register")) {
       setTab("customer");
     } else if (router.asPath.includes("/dash/payment")) {
       setTab("payment");
     } else if (router.asPath.includes("/user")) {
       setTab("user");
+    } else if (router.asPath.includes("/user")) {
+      setTab("user");
     } else if (router.asPath.includes("/dash/subscription")) {
+      setTab("subs");
+    } else if (router.asPath.includes("/auth/subs_regi")) {
       setTab("subs");
     } else if (router.asPath.includes("/subsDetals/details")) {
       setTab("subs");
@@ -25,6 +34,8 @@ function Sidebar() {
     } else if (router.asPath.includes("/dash/product")) {
       setTab("product");
     } else if (router.asPath.includes("/dash/tax")) {
+      setTab("tax");
+    } else if (router.asPath.includes("/auth/tax")) {
       setTab("tax");
     } else if (router.asPath.includes("/dash/report")) {
       setTab("report");
@@ -38,7 +49,7 @@ function Sidebar() {
   };
 
   return (
-    <div className>
+    <div>
       <style>{`
             .change-color:hover img{
               filter: invert(55%) sepia(27%) saturate(1710%) hue-rotate(171deg) brightness(96%) contrast(93%);
@@ -49,7 +60,9 @@ function Sidebar() {
             `}</style>
       <aside
         id="default-sidebar"
-        className="bg-white fixed top-0 left-0 z-40 w-60 h-screen border-r border-[#ECECEC] transition-transform -translate-x-full sm:translate-x-0"
+        className={`bg-white fixed top-0 left-0 z-40 ${
+          mBar ? "w-60" : "w-28"
+        } h-screen border-r border-[#ECECEC] transition-all duration-300 ease-in-out transform sm:translate-x-0`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto border-b border-slate-500">
@@ -63,8 +76,8 @@ function Sidebar() {
                   <Image
                     src="/companylogo.webp"
                     alt=""
-                    height="110"
-                    width="120"
+                    height={mBar ? "110" : "90"}
+                    width={mBar ? "110" : "90"}
                     className="p-2"
                   ></Image>
                 </span>
@@ -82,7 +95,12 @@ function Sidebar() {
                 className="flex items-center py-2 my-3 px-3 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/dashboardLogo.svg" alt="" width="21" height="21" />
-                <span className="ml-3">Dashboard</span>
+
+                {mBar === true ? (
+                  <span className="ml-3">Dashboard</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -96,7 +114,12 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-sm-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/customersLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Customer</span>
+
+                {mBar === true ? (
+                  <span className="ml-3">Customer</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -110,21 +133,11 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/paymentsLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Payment</span>
-              </Link>
-            </li>
-            <li
-              className={`pl-4 py-1 change-color ${
-                tab === "user" ? "change-full" : ""
-              }`}
-              onClick={() => ChangeTab("user")}
-            >
-              <Link
-                href="/user"
-                className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
-              >
-                <Image src="/dashboardLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
+                {mBar === true ? (
+                  <span className="ml-3">Payment</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -143,9 +156,11 @@ function Sidebar() {
                   width="21"
                   height="21"
                 />
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Subscription
-                </span>
+                {mBar === true ? (
+                  <span className="ml-3">Subscription</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -159,7 +174,11 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/invoicesLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Invoice</span>
+                {mBar === true ? (
+                  <span className="ml-3">Invoice</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -173,7 +192,11 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/productsLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
+                {mBar === true ? (
+                  <span className="ml-3">Products</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -187,7 +210,11 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/taxesLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Taxes</span>
+                {mBar === true ? (
+                  <span className="ml-3">Tax</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
             <li
@@ -201,7 +228,11 @@ function Sidebar() {
                 className="flex items-center px-3 my-3 text-gray-900 rounded-lg hover:bg-[#309fed0D]"
               >
                 <Image src="/reportLogo.svg" alt="" width="21" height="21" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Report</span>
+                {mBar === true ? (
+                  <span className="ml-3">Report</span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
               </Link>
             </li>
           </ul>
